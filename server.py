@@ -3,7 +3,7 @@ import time
 import grpc
 from protocol import test_pb2
 from protocol import test_pb2_grpc
-from server import filetree
+from utility import filetree
 
 class test(test_pb2_grpc.testrpcServicer):
     def __init__(self):
