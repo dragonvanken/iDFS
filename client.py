@@ -1,8 +1,8 @@
 import grpc
 import sys
 from termcolor import colored
-from protocol import test_pb2
-from protocol import test_pb2_grpc
+from protocol import MasterForClient_pb2
+from protocol import MasterForClient_pb2_grpc
 from utility import filetree
 
 
@@ -14,12 +14,12 @@ def rebuildtree(namestr):
 
 def getTree():
     channel = grpc.insecure_channel('localhost:50051')
-    stub = test_pb2_grpc.testrpcStub(channel)
+    stub = MasterForClient_pb2_grpc.MFCStub(channel)
 
-    response = stub.getFiletree(test_pb2.TreeNameRequest())
+    response = stub.getFiletree(MasterForClient_pb2.EmptyArg())
     newtree = []
     for feature in response:
-        newtree.append(feature.node_name)
+        newtree.append(feature.name)
     return rebuildtree(newtree)
 
 

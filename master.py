@@ -1,11 +1,11 @@
 from concurrent import futures
 import time
 import grpc
-from protocol import test_pb2
-from protocol import test_pb2_grpc
+from protocol import MasterForClient_pb2
+from protocol import MasterForClient_pb2_grpc
 from utility import filetree
 
-class test(test_pb2_grpc.testrpcServicer):
+class MFC(MasterForClient_pb2_grpc.MFCServicer):
     def __init__(self):
         a = filetree.AbstractNode('a')
         b = filetree.AbstractNode('b')
@@ -25,15 +25,15 @@ class test(test_pb2_grpc.testrpcServicer):
     def getFiletree(self, request, context):
         itemlist = []
         for item in self.db:
-            respond = test_pb2.Tree(
-                node_name = item)
+            respond = MasterForClient_pb2.Str(
+                name = item)
             itemlist.append(respond)
         for answer in itemlist:
                 yield answer
 
 def serve()  :
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    test_pb2_grpc.add_testrpcServicer_to_server(test(), server)
+    MasterForClient_pb2_grpc.add_MFCServicer_to_server(MFC(), server)
     server.add_insecure_port('[::]:50051')
     server.start()
     try:
