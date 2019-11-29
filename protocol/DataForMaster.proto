@@ -1,0 +1,19 @@
+// 编译命令 ：python -m grpc_tools.protoc --python_out=. --grpc_python_out=. -I. DataForMaster.proto
+syntax = "proto3";
+
+// 这是数据服务器Server为控制服务器Master提供的服务DFM的协议
+
+service DFM {
+//服务：
+//请求：
+//返回：
+
+}
+
+
+message EmptyArg {
+}
+
+message Str{
+    string name = 1;
+}
