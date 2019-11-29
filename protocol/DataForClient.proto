@@ -1,0 +1,19 @@
+// 编译命令 ：python -m grpc_tools.protoc --python_out=. --grpc_python_out=. -I. DataForClient.proto
+syntax = "proto3";
+
+// 这是数据服务器Server为客户Client提供的服务DFC的协议
+
+service DFC {
+//服务：
+//请求：
+//返回：
+
+}
+
+
+message EmptyArg {
+}
+
+message Str{
+    string name = 1;
+}
