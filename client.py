@@ -12,7 +12,7 @@ def getTree():
     newtree = []
     print()
     for feature in response:
-        newtree.append(feature.name)
+        newtree.append((feature.name, feature.isFolder))
 
     filetree.FileTree.deseriesFromPath(newtree)
 
@@ -22,7 +22,7 @@ def fetch():
     try:
         getTree()
         print("-------------- TREE --------------")
-        print(filetree.FileTree)
+        filetree.FileTree.print_tree()
     except:
         print(colored('Bad connection.', 'red'))
         print(colored('Please retry.', 'red'))

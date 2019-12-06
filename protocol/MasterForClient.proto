@@ -27,6 +27,7 @@ message EmptyArg{
 //单字符串参数
 message Str{
     string name = 1;
+    bool isFolder = 2;
 }
 
 message getTrunkInfoAndAllocatedDataServerRequest{

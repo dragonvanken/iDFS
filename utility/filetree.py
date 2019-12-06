@@ -72,14 +72,15 @@ class Tree:
                 node.path = node.parent.path+'/'+node.name if node.parent else node.name
             self.changed = False
 
-    def __pprint_tree(self, node, _prefix="", _last=True):
+    def __pprint_tree(self, node, isTmpTop, _prefix="", _last=True):
+        if not isTmpTop:
             print(_prefix, "`- " if _last else "|- ", colored(node.name, "green" if node.isFolder else None), sep="")
             _prefix += "   " if _last else "|  "
-            child = node.child
-            while(child):
-                _last = child.brother is None
-                self.__pprint_tree(child, _prefix, _last)
-                child = child.brother
+        child = node.child
+        while(child):
+            _last = child.brother is None
+            self.__pprint_tree(child, False, _prefix, _last)
+            child = child.brother
 
     def __str__(self):
         self.__makePath()
@@ -159,6 +160,7 @@ class Tree:
         self.root = AbstractNode(*path_list.pop(0))
         for path, isFolder in path_list:
             self.insertNode(path, isFolder)
+        self.changed = True
         self.__makePath()
 
     def BFS(self):
@@ -176,7 +178,9 @@ class Tree:
     def print_tree(self):
         tmp = AbstractNode('tmp', True)
         tmp.child = self.root
-        self.__pprint_tree(tmp)
+        self.__pprint_tree(tmp, True)
+
+FileTree = Tree()
 
 if __name__ == "__main__":
     a = AbstractNode('a',True)
