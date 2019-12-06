@@ -4,7 +4,7 @@ import grpc
 from protocol import MasterForClient_pb2
 from protocol import MasterForClient_pb2_grpc
 from utility import filetree
-from masterlib import Register
+from masterlib import Register as s
 
 class MFC(MasterForClient_pb2_grpc.MFCServicer):
     def __init__(self):

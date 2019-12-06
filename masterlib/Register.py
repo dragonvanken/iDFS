@@ -54,8 +54,10 @@ class Register:
         self.table[key].chunknumber += changeNum
         return 0
 
+
+RegisteTable = Register()
+
 if __name__ == '__main__':
-    Register = Register()
     row0 = HeadRegister()
     row0.set("1.2.3.4", 2000)
     row1 = HeadRegister()
