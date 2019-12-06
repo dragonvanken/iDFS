@@ -3,7 +3,7 @@ class HeadRegister:
         self.DID = 0
         self.IP = '0.0.0.0'
         self.Port = 0
-        self.alive = 1# 1:live 0:eaded -1:uncertin
+        self.alive = 1# 1:live 0:uncertin
         self.chunknumber = 0
 
     def set(self,IP,Port,DID = 0,num =0, alive = 1):
@@ -49,7 +49,7 @@ class Register:
         self.table[key].alive = newAlive
         return 0
 
-    def upchunk(self,key,changeNum):
+    def upchunknum(self,key,changeNum):
         if not key in self.table:
             return -1
         self.table[key].chunknumber += changeNum
@@ -57,10 +57,13 @@ class Register:
 
     def BestDataserver(self):
         minvalue = 9999
-        mindid = 0
+        mindid = -1
         for rows in self.table.values():
-            if rows.chunknumber < minvalue & rows.alive == 1:
+            if not rows.alive == 1:
+                continue
+            if rows.chunknumber < minvalue:
                 mindid = rows.DID
+                minvalue = rows.chunknumber
         return mindid
 
 
