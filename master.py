@@ -3,28 +3,21 @@ import time
 import grpc
 from protocol import MasterForClient_pb2
 from protocol import MasterForClient_pb2_grpc
+from protocol import MasterForData_pb2
+from protocol import MasterForData_pb2_grpc
 from utility import filetree
+from masterlib import Register
+
+class MFD(MasterForData_pb2_grpc.MFDServicer):
+    def RegisteServer(self,request, context):
+        ip = request.ip
+        port = request.port
+        return MasterForData_pb2.Num(id = Register.RegisteTable.setrow(Register.HeadRegister().set(ip,port)))
 
 class MFC(MasterForClient_pb2_grpc.MFCServicer):
-    def __init__(self):
-        a = filetree.AbstractNode('a')
-        b = filetree.AbstractNode('b')
-        c = filetree.AbstractNode('c')
-        d = filetree.AbstractNode('d')
-        e = filetree.AbstractNode('e')
-        a.setbrother(b)
-        b.addchild(c)
-        c.setbrother(d)
-        d.addchild(e)
-        tr = filetree.Tree()
-        tr.setroot(a)
-        tr.makePath()
-        self.db = tr.seriesToPath()
-        print(self.db)
-
     def getFiletree(self, request, context):
         itemlist = []
-        for item in self.db:
+        for item in filetree.FileTree.seriesToPath():
             respond = MasterForClient_pb2.Str(
                 name = item)
             itemlist.append(respond)
@@ -34,6 +27,7 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
 def serve()  :
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     MasterForClient_pb2_grpc.add_MFCServicer_to_server(MFC(), server)
+    MasterForData_pb2_grpc.add_MFDServicer_to_server(MFD(),server)
     server.add_insecure_port('[::]:50051')
     server.start()
     try:
@@ -42,6 +36,8 @@ def serve()  :
     except KeyboardInterrupt:
         server.stop(0)
 
+
 if __name__ == '__main__':
+    filetree.FileTree.setroot(filetree.AbstractNode('root'))
     serve()
 

@@ -4,16 +4,17 @@ syntax = "proto3";
 // 这是控制服务器Master为数据服务器Server提供的服务MFD的协议
 
 service MFD{
-//服务：
-//请求：
-//返回：
-
+//服务：注册数据服务器
+//请求：IP、端口
+//返回：注册码
+            rpc RegisteServer(socket) returns (Num) {}
 }
 
-
-message EmptyArg {
+message Num{
+    int32 id = 1;
 }
 
-message Str{
-    string name = 1;
+message socket{
+    string ip = 1;
+    int32 port = 2;
 }

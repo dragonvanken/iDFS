@@ -1,6 +1,3 @@
-import os
-import json
-
 class AbstractNode:
     def __init__(self, name):
         self.name = name
@@ -113,6 +110,10 @@ class Tree:
                 cur_note = cur_note.brother
             else:
                 cur_note = stack.pop(0)
+
+
+FileTree = Tree()
+
 
 if __name__ == "__main__":
     a = AbstractNode('a')

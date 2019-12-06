@@ -1,3 +1,0 @@
-# iDFS
-A Distributed FileSystem
-

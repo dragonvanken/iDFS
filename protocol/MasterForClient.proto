@@ -1,4 +1,4 @@
-// 编译命令 ：python -m grpc_tools.protoc --python_out=. --grpc_python_out=. -I. MasterForClient.proto
+ // 编译命令 ：python -m grpc_tools.protoc --python_out=. --grpc_python_out=. -I. MasterForClient.proto
 syntax = "proto3";
 
 // 这是控制服务器Master为客户Client提供的服务MFC的协议
