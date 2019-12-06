@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x15MasterForClient.proto\"\n\n\x08\x45mptyArg\"%\n\x03Str\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x10\n\x08isFolder\x18\x02 \x01(\x08\"V\n)getTrunkInfoAndAllocatedDataServerRequest\x12\r\n\x05state\x18\x01 \x01(\t\x12\x0c\n\x04size\x18\x02 \x01(\x05\x12\x0c\n\x04path\x18\x03 \x01(\t2\x85\x01\n\x03MFC\x12\"\n\x0bgetFiletree\x12\t.EmptyArg\x1a\x04.Str\"\x00\x30\x01\x12Z\n\"getTrunkInfoAndAllocatedDataServer\x12*.getTrunkInfoAndAllocatedDataServerRequest\x1a\x04.Str\"\x00\x30\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x15MasterForClient.proto\"\n\n\x08\x45mptyArg\"%\n\x03Str\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x10\n\x08isFolder\x18\x02 \x01(\x08\"G\n)getChunkInfoAndAllocatedDataServerRequest\x12\x0c\n\x04size\x18\x01 \x01(\x05\x12\x0c\n\x04path\x18\x02 \x01(\t\"~\n\rChunkStructor\x12\x11\n\tChunkSize\x18\x01 \x01(\x05\x12\x0f\n\x07\x43hunkId\x18\x02 \x01(\x05\x12\r\n\x05inFID\x18\x03 \x01(\x05\x12\x0e\n\x06offset\x18\x04 \x01(\x05\x12\x10\n\x08StoreDID\x18\x05 \x01(\x05\x12\n\n\x02ip\x18\x06 \x01(\t\x12\x0c\n\x04port\x18\x07 \x01(\x05\x32\x8f\x01\n\x03MFC\x12\"\n\x0bgetFiletree\x12\t.EmptyArg\x1a\x04.Str\"\x00\x30\x01\x12\x64\n\"getChunkInfoAndAllocatedDataServer\x12*.getChunkInfoAndAllocatedDataServerRequest\x1a\x0e.ChunkStructor\"\x00\x30\x01\x62\x06proto3')
 )
 
 
@@ -88,30 +88,23 @@ _STR = _descriptor.Descriptor(
 )
 
 
-_GETTRUNKINFOANDALLOCATEDDATASERVERREQUEST = _descriptor.Descriptor(
-  name='getTrunkInfoAndAllocatedDataServerRequest',
-  full_name='getTrunkInfoAndAllocatedDataServerRequest',
+_GETCHUNKINFOANDALLOCATEDDATASERVERREQUEST = _descriptor.Descriptor(
+  name='getChunkInfoAndAllocatedDataServerRequest',
+  full_name='getChunkInfoAndAllocatedDataServerRequest',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='state', full_name='getTrunkInfoAndAllocatedDataServerRequest.state', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='size', full_name='getTrunkInfoAndAllocatedDataServerRequest.size', index=1,
-      number=2, type=5, cpp_type=1, label=1,
+      name='size', full_name='getChunkInfoAndAllocatedDataServerRequest.size', index=0,
+      number=1, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='path', full_name='getTrunkInfoAndAllocatedDataServerRequest.path', index=2,
-      number=3, type=9, cpp_type=9, label=1,
+      name='path', full_name='getChunkInfoAndAllocatedDataServerRequest.path', index=1,
+      number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -129,12 +122,86 @@ _GETTRUNKINFOANDALLOCATEDDATASERVERREQUEST = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=76,
-  serialized_end=162,
+  serialized_end=147,
+)
+
+
+_CHUNKSTRUCTOR = _descriptor.Descriptor(
+  name='ChunkStructor',
+  full_name='ChunkStructor',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='ChunkSize', full_name='ChunkStructor.ChunkSize', index=0,
+      number=1, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='ChunkId', full_name='ChunkStructor.ChunkId', index=1,
+      number=2, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='inFID', full_name='ChunkStructor.inFID', index=2,
+      number=3, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='offset', full_name='ChunkStructor.offset', index=3,
+      number=4, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='StoreDID', full_name='ChunkStructor.StoreDID', index=4,
+      number=5, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='ip', full_name='ChunkStructor.ip', index=5,
+      number=6, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='port', full_name='ChunkStructor.port', index=6,
+      number=7, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=149,
+  serialized_end=275,
 )
 
 DESCRIPTOR.message_types_by_name['EmptyArg'] = _EMPTYARG
 DESCRIPTOR.message_types_by_name['Str'] = _STR
-DESCRIPTOR.message_types_by_name['getTrunkInfoAndAllocatedDataServerRequest'] = _GETTRUNKINFOANDALLOCATEDDATASERVERREQUEST
+DESCRIPTOR.message_types_by_name['getChunkInfoAndAllocatedDataServerRequest'] = _GETCHUNKINFOANDALLOCATEDDATASERVERREQUEST
+DESCRIPTOR.message_types_by_name['ChunkStructor'] = _CHUNKSTRUCTOR
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 EmptyArg = _reflection.GeneratedProtocolMessageType('EmptyArg', (_message.Message,), {
@@ -151,12 +218,19 @@ Str = _reflection.GeneratedProtocolMessageType('Str', (_message.Message,), {
   })
 _sym_db.RegisterMessage(Str)
 
-getTrunkInfoAndAllocatedDataServerRequest = _reflection.GeneratedProtocolMessageType('getTrunkInfoAndAllocatedDataServerRequest', (_message.Message,), {
-  'DESCRIPTOR' : _GETTRUNKINFOANDALLOCATEDDATASERVERREQUEST,
+getChunkInfoAndAllocatedDataServerRequest = _reflection.GeneratedProtocolMessageType('getChunkInfoAndAllocatedDataServerRequest', (_message.Message,), {
+  'DESCRIPTOR' : _GETCHUNKINFOANDALLOCATEDDATASERVERREQUEST,
   '__module__' : 'MasterForClient_pb2'
-  # @@protoc_insertion_point(class_scope:getTrunkInfoAndAllocatedDataServerRequest)
+  # @@protoc_insertion_point(class_scope:getChunkInfoAndAllocatedDataServerRequest)
   })
-_sym_db.RegisterMessage(getTrunkInfoAndAllocatedDataServerRequest)
+_sym_db.RegisterMessage(getChunkInfoAndAllocatedDataServerRequest)
+
+ChunkStructor = _reflection.GeneratedProtocolMessageType('ChunkStructor', (_message.Message,), {
+  'DESCRIPTOR' : _CHUNKSTRUCTOR,
+  '__module__' : 'MasterForClient_pb2'
+  # @@protoc_insertion_point(class_scope:ChunkStructor)
+  })
+_sym_db.RegisterMessage(ChunkStructor)
 
 
 
@@ -166,8 +240,8 @@ _MFC = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=165,
-  serialized_end=298,
+  serialized_start=278,
+  serialized_end=421,
   methods=[
   _descriptor.MethodDescriptor(
     name='getFiletree',
@@ -179,12 +253,12 @@ _MFC = _descriptor.ServiceDescriptor(
     serialized_options=None,
   ),
   _descriptor.MethodDescriptor(
-    name='getTrunkInfoAndAllocatedDataServer',
-    full_name='MFC.getTrunkInfoAndAllocatedDataServer',
+    name='getChunkInfoAndAllocatedDataServer',
+    full_name='MFC.getChunkInfoAndAllocatedDataServer',
     index=1,
     containing_service=None,
-    input_type=_GETTRUNKINFOANDALLOCATEDDATASERVERREQUEST,
-    output_type=_STR,
+    input_type=_GETCHUNKINFOANDALLOCATEDDATASERVERREQUEST,
+    output_type=_CHUNKSTRUCTOR,
     serialized_options=None,
   ),
 ])

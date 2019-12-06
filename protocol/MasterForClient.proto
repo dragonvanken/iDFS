@@ -13,7 +13,7 @@ service MFC {
     //服务：客户获取文件分块信息并申请Data Server以供文件上传
     //请求：预上传文件大小和在DFS中存放路径
     //返回：状态码、分配的上传服务器（Data Server）信息、文件分块信息
-    rpc getTrunkInfoAndAllocatedDataServer(getTrunkInfoAndAllocatedDataServerRequest) returns (stream Str) {}
+    rpc getChunkInfoAndAllocatedDataServer(getChunkInfoAndAllocatedDataServerRequest) returns (stream ChunkStructor) {}
 
     //事物：文件下载
     //服务：客户获取文件信息并申请Data Server以供文件下载
@@ -24,14 +24,23 @@ service MFC {
 //无参数
 message EmptyArg{
 }
-//单字符串参数
+
 message Str{
     string name = 1;
     bool isFolder = 2;
 }
 
-message getTrunkInfoAndAllocatedDataServerRequest{
-    string state = 1;
-    int32 size = 2;
-    string path = 3;
+message getChunkInfoAndAllocatedDataServerRequest{
+    int32 size = 1;
+    string path = 2;
+}
+
+ message ChunkStructor{
+     int32 ChunkSize = 1; // 文件块大小
+     int32 ChunkId = 2;  // 块标记
+     int32 inFID = 3;    // 属于哪一个文件
+     int32 offset = 4 ;  // 文件块在文件内的偏移
+     int32 StoreDID = 5; // 存储服务器编号
+     string ip =6;
+     int32 port = 7;
 }

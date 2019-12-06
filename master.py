@@ -12,6 +12,7 @@ class MFD(MasterForData_pb2_grpc.MFDServicer):
     def RegisteServer(self,request, context):
         ip = request.ip
         port = request.port
+        print('regist!')
         return MasterForData_pb2.Num(
             id = FileManager.sys.RegistUp(ip,port))
 
@@ -25,6 +26,28 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
             itemlist.append(respond)
         for answer in itemlist:
                 yield answer
+
+    def getChunkInfoAndAllocatedDataServer(self,request, context):
+        size = request.size
+        path = request.path
+
+        # islegal(path) ? 目录树判断路径是否合法
+        Files = FileManager.sys.CreateFile(path,size)
+        respondlist = []
+
+        for chunk in Files.ChunkList:
+            respond = MasterForClient_pb2.ChunkStructor(
+            ChunkSize = chunk.ChunkSize,
+            ChunkId = chunk.getChunkId(),
+            inFID = chunk.getFileID(),
+            offset = chunk.getOffset(),
+            StoreDID = chunk.getDataserverID(),
+            ip = FileManager.sys.Register.getrow(chunk.getDataserverID()).IP,
+            port = FileManager.sys.Register.getrow(chunk.getDataserverID()).Port
+            )
+            respondlist.append(respond)
+        for responds in respondlist:
+                yield responds
 
 def serve()  :
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))

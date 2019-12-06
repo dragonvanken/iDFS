@@ -1,16 +1,18 @@
 import pickle
+import os
 CHUNK_SIZE = 1000 * 1024 # 1MB
 def split(address):
     partnum = 0
     chunkarray = []
     inputfile = open(address, 'rb')  # open the fromfile
+    sizes = os.path.getsize(address)
     while True:
         chunk = inputfile.read(CHUNK_SIZE)
         if not chunk:  # check the chunk is empty
             break
         partnum += 1
         chunkarray.append(chunk)
-    return chunkarray
+    return chunkarray,sizes
 
 def savechunk(address,cchunk):
     with open(address, 'wb') as f:  # open file with write-mode
@@ -71,7 +73,7 @@ class chunk:
         return self.Content
 
 if __name__ == '__main__':
-    c = readchunk('ttt')
-    print(c.ChunkSize)
+    c,s=split('ppp')
+    print(s/1024/1000)
 
 
