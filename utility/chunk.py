@@ -9,7 +9,7 @@ class chunk:
 
         self.StoreDID = 0 # 存储服务器编号
 
-        self.StoreAdress = None # 物理地址
+        self.StoreAdress = None # 物理地址 only in DataServer
         self.Context = None # 存储内容
 
         # read context from adress. Only can be used in DataServer

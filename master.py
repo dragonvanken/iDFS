@@ -13,7 +13,7 @@ class MFD(MasterForData_pb2_grpc.MFDServicer):
         ip = request.ip
         port = request.port
         return MasterForData_pb2.Num(
-            id = FileManager.sys.Register.RegisteTable.setrow(FileManager.sys.Register.HeadRegister().set(ip,port)))
+            id = FileManager.sys.RegistUp(ip,port))
 
 class MFC(MasterForClient_pb2_grpc.MFCServicer):
     def getFiletree(self, request, context):
