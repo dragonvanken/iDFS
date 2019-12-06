@@ -4,10 +4,21 @@ syntax = "proto3";
 // 这是控制服务器Master为客户Client提供的服务MFC的协议
 
 service MFC {
-//服务：为客户提供文件目录树结构
-//请求：无内容请求
-//返回：存储文件路径的字符串流
+    //服务：为客户提供文件目录树结构
+    //请求：无内容请求
+    //返回：存储文件路径的字符串流
     rpc getFiletree(EmptyArg) returns (stream Str) {}
+
+    //事务：文件上传
+    //服务：客户获取文件分块信息并申请Data Server以供文件上传
+    //请求：预上传文件大小和在DFS中存放路径
+    //返回：状态码、分配的上传服务器（Data Server）信息、文件分块信息
+    rpc getTrunkInfoAndAllocatedDataServer(getTrunkInfoAndAllocatedDataServerRequest) returns (stream Str) {}
+
+    //事物：文件下载
+    //服务：客户获取文件信息并申请Data Server以供文件下载
+    //请求：预下载文件在DFS中存放路径
+    //返回：状态码、分配的下载服务器（Data Server）信息、文件分块信息
 }
 
 //无参数
@@ -16,4 +27,10 @@ message EmptyArg{
 //单字符串参数
 message Str{
     string name = 1;
+}
+
+message getTrunkInfoAndAllocatedDataServerRequest{
+    string state = 1;
+    int32 size = 2;
+    string path = 3;
 }
