@@ -6,13 +6,14 @@ from protocol import MasterForClient_pb2_grpc
 from protocol import MasterForData_pb2
 from protocol import MasterForData_pb2_grpc
 from utility import filetree
-from masterlib import Register
+from masterlib import FileManager
 
 class MFD(MasterForData_pb2_grpc.MFDServicer):
     def RegisteServer(self,request, context):
         ip = request.ip
         port = request.port
-        return MasterForData_pb2.Num(id = Register.RegisteTable.setrow(Register.HeadRegister().set(ip,port)))
+        return MasterForData_pb2.Num(
+            id = FileManager.sys.Register.RegisteTable.setrow(FileManager.sys.Register.HeadRegister().set(ip,port)))
 
 class MFC(MasterForClient_pb2_grpc.MFCServicer):
     def getFiletree(self, request, context):
