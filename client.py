@@ -1,34 +1,28 @@
 import grpc
-import sys
 from termcolor import colored
 from protocol import MasterForClient_pb2
 from protocol import MasterForClient_pb2_grpc
 from utility import filetree
 
 
-def rebuildtree(namestr):
-    new_tr = filetree.Tree()
-    new_tr.deseriesFromPath(namestr)
-    return new_tr
-
-
 def getTree():
     channel = grpc.insecure_channel('localhost:50051')
     stub = MasterForClient_pb2_grpc.MFCStub(channel)
-
     response = stub.getFiletree(MasterForClient_pb2.EmptyArg())
     newtree = []
+    print()
     for feature in response:
         newtree.append(feature.name)
-    return rebuildtree(newtree)
+
+    filetree.FileTree.deseriesFromPath(newtree)
 
 
 def fetch():
     print('Fetching remote information.')
     try:
-        file_tree = getTree()
+        getTree()
         print("-------------- TREE --------------")
-        print(file_tree)
+        print(filetree.FileTree)
     except:
         print(colored('Bad connection.', 'red'))
         print(colored('Please retry.', 'red'))

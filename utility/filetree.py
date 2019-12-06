@@ -111,6 +111,10 @@ class Tree:
             else:
                 cur_note = stack.pop(0)
 
+
+FileTree = Tree()
+
+
 if __name__ == "__main__":
     a = AbstractNode('a')
     b = AbstractNode('b')
