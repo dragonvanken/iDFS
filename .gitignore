@@ -134,3 +134,4 @@ dmypy.json
 
 .nxy/
 .vscode/
+.DS_Store
