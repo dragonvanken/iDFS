@@ -20,7 +20,8 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
         itemlist = []
         for item in filetree.FileTree.seriesToPath():
             respond = MasterForClient_pb2.Str(
-                name = item)
+                name = item[0],
+                isFolder = item[1])
             itemlist.append(respond)
         for answer in itemlist:
                 yield answer
@@ -39,6 +40,6 @@ def serve()  :
 
 
 if __name__ == '__main__':
-    filetree.FileTree.setroot(filetree.AbstractNode('root'))
+    filetree.FileTree.setroot(filetree.AbstractNode('root',True))
     serve()
 
