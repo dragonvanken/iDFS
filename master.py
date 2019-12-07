@@ -5,6 +5,8 @@ from protocol import MasterForClient_pb2
 from protocol import MasterForClient_pb2_grpc
 from protocol import MasterForData_pb2
 from protocol import MasterForData_pb2_grpc
+from protocol import DataForMaster_pb2
+from protocol import DataForMaster_pb2_grpc
 from utility import filetree
 from masterlib import FileManager
 from masterlib import Backup
@@ -50,6 +52,51 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
         for responds in respondlist:
                 yield responds
 
+def ConnectDataServer(ip,port):
+    channel = grpc.insecure_channel(ip + ':' + str(port) )
+    stub = DataForMaster_pb2_grpc.DFMStub(channel)
+    return stub
+
+# 删除备份请求 （主文件块DS，新备份文件块DS）
+def deletebackupinfo(sourceIP,sourcePort,sourcechunkid):
+    astub = ConnectDataServer(sourceIP,sourcePort)
+
+
+# 发送添加备份请求 （主文件块DS，新备份文件块DS）
+def addbackupinfo(sourceIP,sourcePort,sourcechunkid,newIP,newPort,newchunkid):
+    astub = ConnectDataServer(newIP, newPort)
+    response = astub.addbackup(DataForMaster_pb2.addbackupRequest(
+        ip = sourceIP,
+        port = sourcePort,
+        cid = sourcechunkid,
+        newcid = newchunkid
+    ))
+    return response.iswrite
+
+def backup() :
+    while True:
+        task = Backup.BackupManager.start()
+        if task is None:
+            break
+        fid = task[0]
+        cid = task[1]
+        op = task[2]
+        sourcechunk = FileManager.sys.seekChunk(fid, cid)
+        sourceip, sourceport = FileManager.sys.seekSocket(sourcechunk.getDataserverID())
+        if op:
+            destionchunk = sourcechunk
+            destionchunk.setCID(FileManager.sys.getNewCID())
+            bestdataserver = FileManager.sys.Register.BestDataserver()
+            destionchunk.setDID(bestdataserver)
+            destionip ,destionport= FileManager.sys.seekSocket(bestdataserver)
+            if addbackupinfo(sourceip,sourceport,cid,destionip,destionport,destionchunk.getChunkID()):
+                Backup.BackupManager.end(cid,destionchunk)
+            else:
+                print(str(cid)+' backup failed!')
+        else:
+             deletebackupinfo(sourceip,sourceport,cid)
+             Backup.BackupManager.end(cid)
+
 def serve()  :
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     MasterForClient_pb2_grpc.add_MFCServicer_to_server(MFC(), server)
@@ -59,6 +106,7 @@ def serve()  :
     try:
         while True:
             time.sleep(60) # one day in seconds 60*60*24
+            backup()
     except KeyboardInterrupt:
         server.stop(0)
 

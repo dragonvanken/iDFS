@@ -4,10 +4,10 @@ syntax = "proto3";
 // 这是数据服务器Server为控制服务器Master提供的服务DFM的协议
 
 service DFM {
-//服务：
-//请求：
-//返回：
-
+//服务：添加文件备份
+//请求：主文件块所在的IP,PORT以及CID，以及希望创建的新文件块的CID
+//返回：BOOL
+    rpc addbackup(addbackupRequest) returns (addbackupResponse) {}
 }
 
 
@@ -16,4 +16,13 @@ message EmptyArg {
 
 message Str{
     string name = 1;
+}
+message addbackupResponse{
+    bool iswrite=1;
+}
+message addbackupRequest {
+    string ip=1;
+    int32 port=2;
+    int32 cid =3;
+    int32 newcid = 4;
 }
