@@ -42,8 +42,8 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
             inFID = chunk.getFileID(),
             offset = chunk.getOffset(),
             StoreDID = chunk.getDataserverID(),
-            ip = FileManager.sys.Register.getrow(chunk.getDataserverID()).IP,
-            port = FileManager.sys.Register.getrow(chunk.getDataserverID()).Port
+            ip = FileManager.sys.Register.getrow(chunk.getDataserverID()).getIP(),
+            port = FileManager.sys.Register.getrow(chunk.getDataserverID()).getport()
             )
             respondlist.append(respond)
         for responds in respondlist:

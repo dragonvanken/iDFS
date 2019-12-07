@@ -14,6 +14,12 @@ class HeadRegister:
         self.chunknumber = num
         return self
 
+    def getIP(self):
+        return self.IP
+
+    def getport(self):
+        return self.Port
+
 class Register:
     def __init__(self):
         self.table = dict()
