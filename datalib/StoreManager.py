@@ -37,7 +37,9 @@ class StoreManage:
     def aborted(self, cid):
         if not cid in self.UsedChunk:
             return False
-        self.UsedChunk.pop(cid)
+        else:
+            self.UsedChunk.pop(cid)
+            return True
 
     def setDID(self,did):
         self.DID = did

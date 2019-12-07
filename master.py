@@ -59,7 +59,6 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
         isFolder = request.isFolder
         msg0 = msg1 = 0
         listToDelete = []
-        print('Oops, no such directory or file')
         try:
             listToDelete = filetree.Tree.getNodes(FilePath)
         except:
