@@ -1,0 +1,63 @@
+ // 编译命令 ：python -m grpc_tools.protoc --python_out=. --grpc_python_out=. -I. MasterForClient.proto
+syntax = "proto3";
+
+// 这是控制服务器Master为客户Client提供的服务MFC的协议
+
+service MFC {
+    //服务：为客户提供文件目录树结构
+    //请求：无内容请求
+    //返回：存储文件路径的字符串流
+    rpc getFiletree(EmptyArg) returns (stream Str) {}
+
+    //事务：文件上传
+    //服务：客户获取文件分块信息并申请Data Server以供文件上传
+    //请求：预上传文件大小和在DFS中存放路径
+    //返回：状态码、分配的上传服务器（Data Server）信息、文件分块信息
+    rpc getChunkInfoAndAllocatedDataServer(getChunkInfoAndAllocatedDataServerRequest) returns (stream ChunkStructor) {}
+
+    //事物：文件下载
+    //服务：客户获取文件信息并申请Data Server以供文件下载
+    //请求：预下载文件在DFS中存放路径
+    //返回：状态码、分配的下载服务器（Data Server）信息、文件分块信息
+
+
+    //事物：文件删除
+    //服务：客户删除指定路径下的某个文件
+    //请求：文件路径
+    //返回：状态码，返回信息
+    rpc deleteFile(FilePath) returns (ACK) {}
+}
+
+//无参数
+message EmptyArg{
+}
+
+message Str{
+    string name = 1;
+    bool isFolder = 2;
+}
+
+message getChunkInfoAndAllocatedDataServerRequest{
+    int32 size = 1;
+    string path = 2;
+}
+
+ message ChunkStructor{
+     int32 ChunkSize = 1; // 文件块大小
+     int32 ChunkId = 2;  // 块标记
+     int32 inFID = 3;    // 属于哪一个文件
+     int32 offset = 4 ;  // 文件块在文件内的偏移
+     int32 StoreDID = 5; // 存储服务器编号
+     string ip =6;
+     int32 port = 7;
+}
+
+message FilePath{
+    string path = 1;    //要删除的文件路径
+    bool isFolder = 2;  //文件信息，是否是文件夹
+}
+
+message ACK{
+    bool feedBack = 1; //成功与否的确认信息
+    string msg = 2;    //返回信息
+}

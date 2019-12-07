@@ -23,13 +23,6 @@ class AFile:
             if item.getChunkId() == CID:
                 self.ChunkList.remove(item)
                 break
-
-    # 查找主文件分块
-    def seekChunk(self, CID):
-        for item in self.ChunkList:
-            if item.getChunkId() == CID:
-                return item
-
     def setFszie(self,s):
         self.size = s
 
@@ -48,8 +41,8 @@ class AFile:
     def getpath(self):
         return self.path
 
-    def vote(self,cid,res):
-        self.voter.append((cid,res))
+    # def getChunkList(self):
+    #     return self.ChunkList
 
 class FileManager:
     def __init__(self):
@@ -77,21 +70,16 @@ class FileManager:
         self.FileSystem.setdefault(newFile.getFID(),newFile)
         return newFile
 
-    def getNewCID(self):
-        self.CIDcout += 1
-        return sys.CIDcout
-    # 按ID查找AFile
+    # 按ID查找
     def FindByFID(self,fid):
         return self.FileSystem.get(fid)
-    # 按名查找AFile
+    # 按名查找
     def FindByFilenama(self, path):
         for files in self.FileSystem.values():
             if files.path == path:
                 fids = files.FileId
                 return self.FindByFID(fids)
-    # 按ID查找DID
-    def seekChunk(self,fid,cid):
-        return self.FindByFID(fid).seekChunk(cid)
+
     # 删除文件记录
     def DeleteFile(self,fid):
         deleteRecord = self.FileSystem.pop(fid)
@@ -104,16 +92,13 @@ class FileManager:
     def RegistUp(self,ip,port):
         return sys.Register.setrow(Register.HeadRegister().set(ip,port))
     # 查询
-    def seekSocket(self,did):
+    def SeekSocket(self,did):
         ip = sys.Register.getrow(did).getIP()
         port = sys.Register.getrow(did).getport()
         return ip,port
     # 注销
     def LogOut(self,did):
         return sys.Register.deleterow(did)
-
-    def vote(self,fid,cid,res):
-        sys.FindByFID(fid).vote(cid,res)
 
 sys = FileManager()
 
