@@ -99,8 +99,7 @@ class BackupManage:
     def start(self):
         TaskList = self.BackupTask
         self.BackupTask.clear()
-
-
+        
 BackupManager = BackupManage()
 
 if __name__ == '__main__':

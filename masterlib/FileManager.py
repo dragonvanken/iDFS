@@ -88,6 +88,11 @@ class FileManager:
     # 注册
     def RegistUp(self,ip,port):
         return sys.Register.setrow(Register.HeadRegister().set(ip,port))
+    # 查询
+    def SeekSocket(self,did):
+        ip = sys.Register.getrow(did).getIP()
+        port = sys.Register.getrow(did).getport()
+        return ip,port
     # 注销
     def LogOut(self,did):
         return sys.Register.deleterow(did)
