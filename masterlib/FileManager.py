@@ -72,7 +72,7 @@ class FileManager:
 
     # 按ID查找
     def FindByFID(self,fid):
-        return self.FileSystem.get(fid)
+        return self.FileSystem[fid]
     # 按名查找
     def FindByFilenama(self, path):
         for files in self.FileSystem.values():

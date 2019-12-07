@@ -113,10 +113,8 @@ def ConnectMaster():
 def deleteFile(stub):
     toDelete = input('the file to delete: ')
     ack = stub.deleteFile(toDelete)
-    if ack:
-        print('Delete Finished!')
-    else:
-        print('Houston We Have a Problem --')
+    print(ack.msg)
+
 
 if __name__ == '__main__':
     user_interface()
