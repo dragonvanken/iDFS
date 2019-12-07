@@ -72,12 +72,14 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
 
         msg0 = filetree.Tree.removeNode(FileName)
         for fileName in listToDelete:
-            msg1 = 0
-            chunkList = FileManager.FileManager.FindByFilenama(fileName).ChunkList
-            for chunk in chunkList:
+            msg2 = 0
+            fileForFID = FileManager.FileManager.FindByFilenama(fileName)
+            for chunk in fileForFID.ChunkList:
                 did = chunk.getDataserverID()
                 cid = chunk.getChunkId()
-                deleteChunkOnDataServer(ConnectDataServer(did), cid)
+                if deleteChunkOnDataServer(ConnectDataServer(did), cid):
+                    msg2 += 1
+            if msg2 == len(fileForFID):
                 msg1 += 1
             FileManager.FileManager.DeleteFile()
         
