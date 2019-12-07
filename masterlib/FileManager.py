@@ -48,6 +48,9 @@ class AFile:
     def getpath(self):
         return self.path
 
+    def vote(self,cid,res):
+        self.voter.append((cid,res))
+
 class FileManager:
     def __init__(self):
             self.FileSystem = {}
@@ -108,6 +111,9 @@ class FileManager:
     # 注销
     def LogOut(self,did):
         return sys.Register.deleterow(did)
+
+    def vote(self,fid,cid,res):
+        sys.FindByFID(fid).vote(cid,res)
 
 sys = FileManager()
 

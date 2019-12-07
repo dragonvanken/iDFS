@@ -4,16 +4,25 @@ syntax = "proto3";
 // 这是数据服务器Server为客户Client提供的服务DFC的协议
 
 service DFC {
-//服务：
-//请求：
-//返回：
-
+//服务：用户上传chunk到Data Server
+//请求：chunk快
+//返回：无
+    rpc uploadChunk(uploadChunkRequest) returns (uploadChunkResponse){}
 }
 
-
-message EmptyArg {
+message MetaData{
+    int32 ChunkSize = 1; // 文件块大小
+    int32 ChunkId = 2;  // 块标记
+    int32 inFID = 3;    // 属于哪一个文件
+    int32 offset = 4 ;  // 文件块在文件内的偏移
+    int32 StoreDID = 5; // 存储服务器编号
 }
 
-message Str{
-    string name = 1;
+ message uploadChunkRequest{
+    MetaData metadata = 1;
+    bytes chunk = 2;
+}
+
+message uploadChunkResponse{
+    string Msg = 1;
 }

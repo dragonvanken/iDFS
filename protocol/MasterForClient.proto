@@ -25,7 +25,7 @@ service MFC {
     //服务：客户删除指定路径下的某个文件
     //请求：无内容请求
     //返回：状态码
-    rpc deleteFile(DeleteFile) returns (ACK) {}
+    rpc deleteFile(FilePath) returns (ACK) {}
 }
 
 //无参数
@@ -52,11 +52,12 @@ message getChunkInfoAndAllocatedDataServerRequest{
      int32 port = 7;
 }
 
-message DeleteFile{
+message FilePath{
     string path = 1;    //要删除的文件路径
     bool isFolder = 2;  //文件信息，是否是文件夹
 }
 
 message ACK{
-    bool feedBack = 1； //成功与否的确认信息
+    bool feedBack = 1; //成功与否的确认信息
+    string msg = 2;    //返回信息
 }
