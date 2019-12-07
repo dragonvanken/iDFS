@@ -10,10 +10,3 @@ service DFM {
 
 }
 
-
-message EmptyArg {
-}
-
-message Str{
-    string name = 1;
-}
