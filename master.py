@@ -57,7 +57,7 @@ def serve()  :
     server.start()
     try:
         while True:
-            time.sleep(60*60*24) # one day in seconds
+            time.sleep(60) # one day in seconds 60*60*24
     except KeyboardInterrupt:
         server.stop(0)
 
