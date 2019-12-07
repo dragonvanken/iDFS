@@ -20,11 +20,16 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
+<<<<<<< HEAD
   serialized_pb=_b('\n\x13\x44\x61taForMaster.proto\"\n\n\x08\x45mptyArg\"\x13\n\x03Str\x12\x0c\n\x04name\x18\x01 \x01(\t\"\x16\n\x07\x63hunkID\x12\x0b\n\x03\x43ID\x18\x01 \x01(\x05\"\x17\n\x03\x41\x43K\x12\x10\n\x08\x66\x65\x65\x64\x62\x61\x63k\x18\x01 \x01(\x08\x32\x32\n\x03\x44\x46M\x12+\n\x17\x64\x65leteChunkOnDataServer\x12\x08.chunkID\x1a\x04.ACK\"\x00\x62\x06proto3')
+=======
+  serialized_pb=_b('\n\x13\x44\x61taForMaster.proto2\x05\n\x03\x44\x46Mb\x06proto3')
+>>>>>>> a5ba54a996c14d027109d17e0d53f33168cd954f
 )
 
 
 
+<<<<<<< HEAD
 
 _EMPTYARG = _descriptor.Descriptor(
   name='EmptyArg',
@@ -176,6 +181,10 @@ ACK = _reflection.GeneratedProtocolMessageType('ACK', (_message.Message,), {
   })
 _sym_db.RegisterMessage(ACK)
 
+=======
+_sym_db.RegisterFileDescriptor(DESCRIPTOR)
+
+>>>>>>> a5ba54a996c14d027109d17e0d53f33168cd954f
 
 
 _DFM = _descriptor.ServiceDescriptor(
@@ -184,8 +193,13 @@ _DFM = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
+<<<<<<< HEAD
   serialized_start=105,
   serialized_end=155,
+=======
+  serialized_start=23,
+  serialized_end=28,
+>>>>>>> a5ba54a996c14d027109d17e0d53f33168cd954f
   methods=[
   _descriptor.MethodDescriptor(
     name='deleteChunkOnDataServer',

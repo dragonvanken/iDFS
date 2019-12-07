@@ -174,6 +174,8 @@ class Tree:
 
     def BFS(self, FilePath=None):
         """返回一个按照广度优先搜索顺序抛出节点的生成器"""
+        if FilePath is None:
+            FilePath = self.root
         stack = []
         cur_note = FilePath
         while (cur_note or len(stack)):

@@ -2,10 +2,33 @@ import grpc
 from termcolor import colored
 from protocol import MasterForClient_pb2
 from protocol import MasterForClient_pb2_grpc
+from protocol import DataForClient_pb2
+from protocol import DataForClient_pb2_grpc
 from utility import filetree
 from utility import chunk
-def SendChunkToDataserver(ip,port,chunks):
-    print(chunks.getFileID())
+import atexit
+import multiprocessing
+import threading
+
+
+def SendChunkToDataserver(args):
+    address, cchunk = args
+    print(cchunk.ChunkId, address)
+
+    channel = grpc.insecure_channel(address)
+    stub = DataForClient_pb2_grpc.DFCStub(channel)
+    metadata = DataForClient_pb2.MetaData(
+        ChunkSize = cchunk.ChunkSize,
+        ChunkId = cchunk.getChunkId(),
+        inFID = cchunk.getFileID(),
+        offset = cchunk.getOffset(),
+        StoreDID = cchunk.getDataserverID()
+    )
+    request = DataForClient_pb2.uploadChunkRequest(metadata=metadata, chunk=cchunk.getContent())
+
+    response = stub.uploadChunk(request)
+    channel.close()
+    return response.Msg
 
 def upfile(stub):
     sourcepath = 'ppp'
@@ -16,6 +39,8 @@ def upfile(stub):
     path = destination
     ))
     chunknum = 0
+    address = []
+    allchunk = []
     for feature in response:
         chunks = chunk.chunk()
         chunks.ChunkSize = feature.ChunkSize
@@ -26,8 +51,13 @@ def upfile(stub):
         port = feature.port
         chunks.setContent(contentarray[chunknum])
         chunknum += 1
-        SendChunkToDataserver(ip,port,chunks)
+        address.append(str(ip)+':'+str(port))
+        allchunk.append(chunks)
+
+    with multiprocessing.Pool(4) as p:
+        results = p.map(SendChunkToDataserver, zip(address,allchunk))
     print('update ok')
+    print(results)
 
 def getTree(stub):
     response = stub.getFiletree(MasterForClient_pb2.EmptyArg())
@@ -39,12 +69,13 @@ def getTree(stub):
     filetree.FileTree.deseriesFromPath(newtree)
 
 def update(stub):
-    print('updata')
-    try:
+    print('update')
+    """ try:
         upfile(stub)
     except:
         print(colored('Bad connection.', 'red'))
-        print(colored('Please retry.', 'red'))
+        print(colored('Please retry.', 'red')) """
+    upfile(stub)
 
 def fetch(stub):
     print('Fetching remote information.')
@@ -87,3 +118,4 @@ def deleteFile(stub):
 
 if __name__ == '__main__':
     user_interface()
+

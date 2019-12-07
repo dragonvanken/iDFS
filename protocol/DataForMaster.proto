@@ -11,6 +11,7 @@ service DFM {
     rpc deleteChunkOnDataServer(chunkID) returns (ACK) {}
 }
 
+<<<<<<< HEAD
 
 message EmptyArg {
 }
@@ -26,3 +27,5 @@ message chunkID {
 message ACK{
     bool feedback = 1;
 }
+=======
+>>>>>>> a5ba54a996c14d027109d17e0d53f33168cd954f
