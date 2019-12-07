@@ -160,9 +160,10 @@ class Tree:
         self.__makePath()
         mynode = self.seek(FilePath)
         assert mynode != None
-        path_list = []
-        for node in self.BFS(path=mynode):
-            path_list.append(node.path)
+        path_list = [mynode.path]
+        if mynode.child != None:
+            for node in self.BFS(path=mynode.child):
+                path_list.append(node.path)
         return path_list
 
     def deseriesFromPath(self, path_list):

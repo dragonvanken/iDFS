@@ -59,7 +59,7 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
         isFolder = request.isFolder
         msg0 = msg1 = 0
         listToDelete = []
-
+        print('Oops, no such directory or file')
         try:
             listToDelete = filetree.Tree.getNodes(FilePath)
         except:
@@ -72,13 +72,15 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
         for fileName in listToDelete:
             msg2 = 0
             fileForFID = FileManager.FileManager.FindByFilenama(fileName)
-            for chunk in fileForFID.getChunkList():
+            chunkList  = fileForFID.getChunkList()
+            for chunk in chunkList:
                 did = chunk.getDataserverID()
                 cid = chunk.getChunkId()
                 if deleteChunkOnDataServer(ConnectDataServer(did), cid):
                     msg2 += 1
-            if msg2 == len(fileForFID):
+            if msg2 == len(chunkList):
                 msg1 += 1
+            else: break
             FileManager.FileManager.DeleteFile(fileForFID.getFID())
 
         if msg0 and msg1 == len(listToDelete):
