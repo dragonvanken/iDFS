@@ -35,12 +35,6 @@ class chunk:
         self.StoreAdress = None # 物理地址 only in DataServer
         self.Content = None # 存储内容
 
-        # read context from adress. Only can be used in DataServer
-    def _loadContent(self):
-
-       return self.Content
-
-
     def setCID(self,CID):
         self.ChunkId = CID
 
@@ -68,6 +62,9 @@ class chunk:
 
     def getFileID(self):
         return self.inFID
+
+    def getAddress(self):
+        return self.StoreAdress
 
     def getContent(self):
         return self.Content
