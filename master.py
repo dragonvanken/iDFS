@@ -56,32 +56,31 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
 
 
     def deleteFile(self, request, context):
-        FileName = request.path
+        FilePath = request.path
         isFolder = request.isFolder
         msg0 = msg1 = 0
         listToDelete = []
 
         try:
-            filetree.Tree.setroot(FileName)
-            listToDelete = filetree.Tree.seriesToPath()
+            listToDelete = filetree.Tree.getNodes(FilePath)
         except:
             return MasterForClient_pb2.ACK(
                 msg = 'Oops, no such directory or file',
                 feedback = False
                 )
 
-        msg0 = filetree.Tree.removeNode(FileName)
+        msg0 = filetree.Tree.removeNode(FilePath)
         for fileName in listToDelete:
             msg2 = 0
             fileForFID = FileManager.FileManager.FindByFilenama(fileName)
-            for chunk in fileForFID.ChunkList:
+            for chunk in fileForFID.getChunkList():
                 did = chunk.getDataserverID()
                 cid = chunk.getChunkId()
                 if deleteChunkOnDataServer(ConnectDataServer(did), cid):
                     msg2 += 1
             if msg2 == len(fileForFID):
                 msg1 += 1
-            FileManager.FileManager.DeleteFile()
+            FileManager.FileManager.DeleteFile(fileForFID.getFID())
         
         if msg0 and msg1 == len(listToDelete):
             return MasterForClient_pb2.ACK(

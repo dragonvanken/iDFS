@@ -41,8 +41,8 @@ class AFile:
     def getpath(self):
         return self.path
 
-    # def getChunkList(self):
-    #     return self.ChunkList
+    def getChunkList(self):
+        return self.ChunkList
 
 class FileManager:
     def __init__(self):
