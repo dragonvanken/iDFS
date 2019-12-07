@@ -5,8 +5,8 @@ from protocol import MasterForData_pb2_grpc
 from protocol import DataForClient_pb2
 from protocol import DataForClient_pb2_grpc
 from utility import chunk
+from datalib import StoreManager
 
-DID = []
 
 class DFC(DataForClient_pb2_grpc.DFCServicer):
     def uploadChunk(self, request, context):
@@ -28,7 +28,7 @@ def register():
     channel = grpc.insecure_channel('localhost:50051')
     stub = MasterForData_pb2_grpc.MFDStub(channel)
     response = stub.RegisteServer(MasterForData_pb2.socket(ip = 'localhost',port = 50000))
-    DID.append(response.id)
+    StoreManager.StoreManager.setDID(response.id)
 
 def serve():
     register()
@@ -40,4 +40,4 @@ def serve():
 
 if __name__ == '__main__':
     serve()
-    print(DID)
+    print(StoreManager.StoreManager.getDID())

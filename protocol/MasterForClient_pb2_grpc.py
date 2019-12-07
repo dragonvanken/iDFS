@@ -25,6 +25,11 @@ class MFCStub(object):
         request_serializer=MasterForClient__pb2.getChunkInfoAndAllocatedDataServerRequest.SerializeToString,
         response_deserializer=MasterForClient__pb2.ChunkStructor.FromString,
         )
+    self.deleteFile = channel.unary_unary(
+        '/MFC/deleteFile',
+        request_serializer=MasterForClient__pb2.FilePath.SerializeToString,
+        response_deserializer=MasterForClient__pb2.ACK.FromString,
+        )
 
 
 class MFCServicer(object):
@@ -51,6 +56,21 @@ class MFCServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
+  def deleteFile(self, request, context):
+    """事物：文件下载
+    服务：客户获取文件信息并申请Data Server以供文件下载
+    请求：预下载文件在DFS中存放路径
+    返回：状态码、分配的下载服务器（Data Server）信息、文件分块信息
+
+    事物：文件删除
+    服务：客户删除指定路径下的某个文件
+    请求：无内容请求
+    返回：状态码
+    """
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
 
 def add_MFCServicer_to_server(servicer, server):
   rpc_method_handlers = {
@@ -63,6 +83,11 @@ def add_MFCServicer_to_server(servicer, server):
           servicer.getChunkInfoAndAllocatedDataServer,
           request_deserializer=MasterForClient__pb2.getChunkInfoAndAllocatedDataServerRequest.FromString,
           response_serializer=MasterForClient__pb2.ChunkStructor.SerializeToString,
+      ),
+      'deleteFile': grpc.unary_unary_rpc_method_handler(
+          servicer.deleteFile,
+          request_deserializer=MasterForClient__pb2.FilePath.FromString,
+          response_serializer=MasterForClient__pb2.ACK.SerializeToString,
       ),
   }
   generic_handler = grpc.method_handlers_generic_handler(

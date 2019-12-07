@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x15MasterForClient.proto\"\n\n\x08\x45mptyArg\"%\n\x03Str\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x10\n\x08isFolder\x18\x02 \x01(\x08\"G\n)getChunkInfoAndAllocatedDataServerRequest\x12\x0c\n\x04size\x18\x01 \x01(\x05\x12\x0c\n\x04path\x18\x02 \x01(\t\"~\n\rChunkStructor\x12\x11\n\tChunkSize\x18\x01 \x01(\x05\x12\x0f\n\x07\x43hunkId\x18\x02 \x01(\x05\x12\r\n\x05inFID\x18\x03 \x01(\x05\x12\x0e\n\x06offset\x18\x04 \x01(\x05\x12\x10\n\x08StoreDID\x18\x05 \x01(\x05\x12\n\n\x02ip\x18\x06 \x01(\t\x12\x0c\n\x04port\x18\x07 \x01(\x05\x32\x8f\x01\n\x03MFC\x12\"\n\x0bgetFiletree\x12\t.EmptyArg\x1a\x04.Str\"\x00\x30\x01\x12\x64\n\"getChunkInfoAndAllocatedDataServer\x12*.getChunkInfoAndAllocatedDataServerRequest\x1a\x0e.ChunkStructor\"\x00\x30\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x15MasterForClient.proto\"\n\n\x08\x45mptyArg\"%\n\x03Str\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x10\n\x08isFolder\x18\x02 \x01(\x08\"G\n)getChunkInfoAndAllocatedDataServerRequest\x12\x0c\n\x04size\x18\x01 \x01(\x05\x12\x0c\n\x04path\x18\x02 \x01(\t\"~\n\rChunkStructor\x12\x11\n\tChunkSize\x18\x01 \x01(\x05\x12\x0f\n\x07\x43hunkId\x18\x02 \x01(\x05\x12\r\n\x05inFID\x18\x03 \x01(\x05\x12\x0e\n\x06offset\x18\x04 \x01(\x05\x12\x10\n\x08StoreDID\x18\x05 \x01(\x05\x12\n\n\x02ip\x18\x06 \x01(\t\x12\x0c\n\x04port\x18\x07 \x01(\x05\"*\n\x08\x46ilePath\x12\x0c\n\x04path\x18\x01 \x01(\t\x12\x10\n\x08isFolder\x18\x02 \x01(\x08\"\x17\n\x03\x41\x43K\x12\x10\n\x08\x66\x65\x65\x64\x42\x61\x63k\x18\x01 \x01(\x08\x32\xb0\x01\n\x03MFC\x12\"\n\x0bgetFiletree\x12\t.EmptyArg\x1a\x04.Str\"\x00\x30\x01\x12\x64\n\"getChunkInfoAndAllocatedDataServer\x12*.getChunkInfoAndAllocatedDataServerRequest\x1a\x0e.ChunkStructor\"\x00\x30\x01\x12\x1f\n\ndeleteFile\x12\t.FilePath\x1a\x04.ACK\"\x00\x62\x06proto3')
 )
 
 
@@ -198,10 +198,81 @@ _CHUNKSTRUCTOR = _descriptor.Descriptor(
   serialized_end=275,
 )
 
+
+_FILEPATH = _descriptor.Descriptor(
+  name='FilePath',
+  full_name='FilePath',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='path', full_name='FilePath.path', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='isFolder', full_name='FilePath.isFolder', index=1,
+      number=2, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=277,
+  serialized_end=319,
+)
+
+
+_ACK = _descriptor.Descriptor(
+  name='ACK',
+  full_name='ACK',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='feedBack', full_name='ACK.feedBack', index=0,
+      number=1, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=321,
+  serialized_end=344,
+)
+
 DESCRIPTOR.message_types_by_name['EmptyArg'] = _EMPTYARG
 DESCRIPTOR.message_types_by_name['Str'] = _STR
 DESCRIPTOR.message_types_by_name['getChunkInfoAndAllocatedDataServerRequest'] = _GETCHUNKINFOANDALLOCATEDDATASERVERREQUEST
 DESCRIPTOR.message_types_by_name['ChunkStructor'] = _CHUNKSTRUCTOR
+DESCRIPTOR.message_types_by_name['FilePath'] = _FILEPATH
+DESCRIPTOR.message_types_by_name['ACK'] = _ACK
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 EmptyArg = _reflection.GeneratedProtocolMessageType('EmptyArg', (_message.Message,), {
@@ -232,6 +303,20 @@ ChunkStructor = _reflection.GeneratedProtocolMessageType('ChunkStructor', (_mess
   })
 _sym_db.RegisterMessage(ChunkStructor)
 
+FilePath = _reflection.GeneratedProtocolMessageType('FilePath', (_message.Message,), {
+  'DESCRIPTOR' : _FILEPATH,
+  '__module__' : 'MasterForClient_pb2'
+  # @@protoc_insertion_point(class_scope:FilePath)
+  })
+_sym_db.RegisterMessage(FilePath)
+
+ACK = _reflection.GeneratedProtocolMessageType('ACK', (_message.Message,), {
+  'DESCRIPTOR' : _ACK,
+  '__module__' : 'MasterForClient_pb2'
+  # @@protoc_insertion_point(class_scope:ACK)
+  })
+_sym_db.RegisterMessage(ACK)
+
 
 
 _MFC = _descriptor.ServiceDescriptor(
@@ -240,8 +325,8 @@ _MFC = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=278,
-  serialized_end=421,
+  serialized_start=347,
+  serialized_end=523,
   methods=[
   _descriptor.MethodDescriptor(
     name='getFiletree',
@@ -259,6 +344,15 @@ _MFC = _descriptor.ServiceDescriptor(
     containing_service=None,
     input_type=_GETCHUNKINFOANDALLOCATEDDATASERVERREQUEST,
     output_type=_CHUNKSTRUCTOR,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='deleteFile',
+    full_name='MFC.deleteFile',
+    index=2,
+    containing_service=None,
+    input_type=_FILEPATH,
+    output_type=_ACK,
     serialized_options=None,
   ),
 ])

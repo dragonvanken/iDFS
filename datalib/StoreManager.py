@@ -1,9 +1,10 @@
 from utility import chunk
 
-class StoreManager:
+class StoreManage:
     def __init__(self):
         self.TmpChunk = {} #  临时存储表
         self.UsedChunk = {} # 永久存储表
+        self.DID = 0
 
     def _EnAddress(self,cid):
         return str(cid)
@@ -33,7 +34,18 @@ class StoreManager:
         self.UsedChunk.setdefault(cid,achunk)
         self.TmpChunk.pop(cid)
 
-StoreManager = StoreManager()
+    def aborted(self, cid):
+        if not cid in self.UsedChunk:
+            return False
+        self.UsedChunk.pop(cid)
+
+    def setDID(self,did):
+        self.DID = did
+
+    def getDID(self):
+        return  self.DID
+
+StoreManager = StoreManage()
 
 if __name__ == '__main__':
     achunk = chunk.chunk()
@@ -41,7 +53,12 @@ if __name__ == '__main__':
     achunk.setContent('are you OK?')
     StoreManager.store(achunk)
     StoreManager.commit(7)
+    StoreManager.aborted(7)
     bchunk = StoreManager.get(7)
-    print(bchunk.getContent())
+    if bchunk is not None:
+        print(bchunk.getContent())
+    else:
+        print('NONE')
+
 
 
