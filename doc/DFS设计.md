@@ -145,7 +145,7 @@ class filechunk:
 ```
 
 ## 4、备份文件块
-主文件块KID|备份文件块KID1|备份文件块ID2|...
+主文件块KID|备份文件块KID1|备份文件块KID2|...
 --|--|--|--
 chunk011|chunk0111|chunk0112|null
 chunk021|chunk0211|null
