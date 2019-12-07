@@ -9,6 +9,7 @@ from protocol import DataForMaster_pb2
 from protocol import DataForMaster_pb2_grpc
 from utility import filetree
 from masterlib import FileManager
+from masterlib import Backup
 
 class MFD(MasterForData_pb2_grpc.MFDServicer):
     def RegisteServer(self,request, context):
@@ -92,7 +93,7 @@ def serve()  :
     server.start()
     try:
         while True:
-            time.sleep(60*60*24) # one day in seconds
+            time.sleep(60) # one day in seconds 60*60*24
     except KeyboardInterrupt:
         server.stop(0)
 
