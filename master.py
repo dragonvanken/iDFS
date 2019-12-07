@@ -5,6 +5,8 @@ from protocol import MasterForClient_pb2
 from protocol import MasterForClient_pb2_grpc
 from protocol import MasterForData_pb2
 from protocol import MasterForData_pb2_grpc
+from protocol import DataForMaster_pb2
+from protocol import DataForMaster_pb2_grpc
 from utility import filetree
 from masterlib import FileManager
 
@@ -49,6 +51,39 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
         for responds in respondlist:
                 yield responds
 
+    def deleteFile(self, request, context):
+        FileName = request.path
+        isFolder = request.isFolder
+        msg0 = msg1 = 0
+        listToDelete = []
+
+        try:
+            filetree.Tree.setroot(FileName)
+            listToDelete = filetree.Tree.seriesToPath()
+        except:
+            return MasterForClient_pb2.ACK(
+                msg = 'Oops, no such directory or file',
+                feedback = False
+                )
+
+        msg0 = filetree.Tree.removeNode(FileName)
+        for f in listToDelete:
+            fid = FileManager.FileManager.FindByFilenama(f)
+            FileManager.FileManager.DeleteFile(fid)
+            msg1 += 1
+        if msg0 and msg1 == len(listToDelete):
+            return MasterForClient_pb2.ACK(
+                msg = 'Successful!',
+                feedback = True
+                )
+        else:
+            return MasterForClient_pb2.ACK(
+                msg = 'Failed!',
+                feedback = False
+                )
+
+
+
 def serve()  :
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     MasterForClient_pb2_grpc.add_MFCServicer_to_server(MFC(), server)
@@ -60,6 +95,11 @@ def serve()  :
             time.sleep(60*60*24) # one day in seconds
     except KeyboardInterrupt:
         server.stop(0)
+
+def ConnectDataServer():
+    channel = grpc.insecure_channel('localhost:50051')
+    stub = DataForMaster_pb2_grpc.DFMStub(channel)
+    return stub
 
 
 if __name__ == '__main__':

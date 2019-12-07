@@ -77,5 +77,13 @@ def ConnectMaster():
     stub = MasterForClient_pb2_grpc.MFCStub(channel)
     return stub
 
+def deleteFile(stub):
+    toDelete = input('the file to delete: ')
+    ack = stub.deleteFile(toDelete)
+    if ack:
+        print('Delete Finished!')
+    else:
+        print('Houston We Have a Problem --')
+
 if __name__ == '__main__':
     user_interface()

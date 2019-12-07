@@ -156,6 +156,15 @@ class Tree:
             path_list.append((node.path, node.isFolder))
         return path_list
 
+    def getNodes(self, FilePath):
+        self.__makePath()
+        mynode = self.seek(FilePath)
+        assert mynode != None
+        path_list = []
+        for node in self.BFS(path=mynode):
+            path_list.append(node.path)
+        return path_list
+
     def deseriesFromPath(self, path_list):
         self.root = AbstractNode(*path_list.pop(0))
         for path, isFolder in path_list:
@@ -163,10 +172,10 @@ class Tree:
         self.changed = True
         self.__makePath()
 
-    def BFS(self):
+    def BFS(self, FilePath=self.root):
         """返回一个按照广度优先搜索顺序抛出节点的生成器"""
         stack = []
-        cur_note = self.root
+        cur_note = FilePath
         while (cur_note or len(stack)):
             if cur_note:
                 yield cur_note
