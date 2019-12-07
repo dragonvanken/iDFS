@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x13\x44\x61taForMaster.proto\"\n\n\x08\x45mptyArg\"\x13\n\x03Str\x12\x0c\n\x04name\x18\x01 \x01(\t2\x05\n\x03\x44\x46Mb\x06proto3')
+  serialized_pb=_b('\n\x13\x44\x61taForMaster.proto\"\n\n\x08\x45mptyArg\"\x13\n\x03Str\x12\x0c\n\x04name\x18\x01 \x01(\t\"\x16\n\x07\x63hunkID\x12\x0b\n\x03\x43ID\x18\x01 \x01(\x05\"\x17\n\x03\x41\x43K\x12\x10\n\x08\x66\x65\x65\x64\x62\x61\x63k\x18\x01 \x01(\x08\x32\x32\n\x03\x44\x46M\x12+\n\x17\x64\x65leteChunkOnDataServer\x12\x08.chunkID\x1a\x04.ACK\"\x00\x62\x06proto3')
 )
 
 
@@ -80,8 +80,72 @@ _STR = _descriptor.Descriptor(
   serialized_end=54,
 )
 
+
+_CHUNKID = _descriptor.Descriptor(
+  name='chunkID',
+  full_name='chunkID',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='CID', full_name='chunkID.CID', index=0,
+      number=1, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=56,
+  serialized_end=78,
+)
+
+
+_ACK = _descriptor.Descriptor(
+  name='ACK',
+  full_name='ACK',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='feedback', full_name='ACK.feedback', index=0,
+      number=1, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=80,
+  serialized_end=103,
+)
+
 DESCRIPTOR.message_types_by_name['EmptyArg'] = _EMPTYARG
 DESCRIPTOR.message_types_by_name['Str'] = _STR
+DESCRIPTOR.message_types_by_name['chunkID'] = _CHUNKID
+DESCRIPTOR.message_types_by_name['ACK'] = _ACK
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 EmptyArg = _reflection.GeneratedProtocolMessageType('EmptyArg', (_message.Message,), {
@@ -98,6 +162,20 @@ Str = _reflection.GeneratedProtocolMessageType('Str', (_message.Message,), {
   })
 _sym_db.RegisterMessage(Str)
 
+chunkID = _reflection.GeneratedProtocolMessageType('chunkID', (_message.Message,), {
+  'DESCRIPTOR' : _CHUNKID,
+  '__module__' : 'DataForMaster_pb2'
+  # @@protoc_insertion_point(class_scope:chunkID)
+  })
+_sym_db.RegisterMessage(chunkID)
+
+ACK = _reflection.GeneratedProtocolMessageType('ACK', (_message.Message,), {
+  'DESCRIPTOR' : _ACK,
+  '__module__' : 'DataForMaster_pb2'
+  # @@protoc_insertion_point(class_scope:ACK)
+  })
+_sym_db.RegisterMessage(ACK)
+
 
 
 _DFM = _descriptor.ServiceDescriptor(
@@ -106,9 +184,18 @@ _DFM = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=56,
-  serialized_end=61,
+  serialized_start=105,
+  serialized_end=155,
   methods=[
+  _descriptor.MethodDescriptor(
+    name='deleteChunkOnDataServer',
+    full_name='DFM.deleteChunkOnDataServer',
+    index=0,
+    containing_service=None,
+    input_type=_CHUNKID,
+    output_type=_ACK,
+    serialized_options=None,
+  ),
 ])
 _sym_db.RegisterServiceDescriptor(_DFM)
 

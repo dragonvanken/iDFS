@@ -19,6 +19,8 @@ class MFD(MasterForData_pb2_grpc.MFDServicer):
         return MasterForData_pb2.Num(
             id = FileManager.sys.RegistUp(ip,port))
 
+    
+
 class MFC(MasterForClient_pb2_grpc.MFCServicer):
     def getFiletree(self, request, context):
         itemlist = []
@@ -52,6 +54,7 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
         for responds in respondlist:
                 yield responds
 
+
     def deleteFile(self, request, context):
         FileName = request.path
         isFolder = request.isFolder
@@ -68,10 +71,16 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
                 )
 
         msg0 = filetree.Tree.removeNode(FileName)
-        for f in listToDelete:
-            fid = FileManager.FileManager.FindByFilenama(f)
-            FileManager.FileManager.DeleteFile(fid)
-            msg1 += 1
+        for fileName in listToDelete:
+            msg1 = 0
+            chunkList = FileManager.FileManager.FindByFilenama(fileName).ChunkList
+            for chunk in chunkList:
+                did = chunk.getDataserverID()
+                cid = chunk.getChunkId()
+                deleteChunkOnDataServer(ConnectDataServer(did), cid)
+                msg1 += 1
+            FileManager.FileManager.DeleteFile()
+        
         if msg0 and msg1 == len(listToDelete):
             return MasterForClient_pb2.ACK(
                 msg = 'Successful!',
@@ -97,10 +106,19 @@ def serve()  :
     except KeyboardInterrupt:
         server.stop(0)
 
-def ConnectDataServer():
-    channel = grpc.insecure_channel('localhost:50051')
+
+def ConnectDataServer(DID):
+    ip, port = FileManager.FileManager.SeekSocket(DID)
+    channel = grpc.insecure_channel(ip + str(port))
     stub = DataForMaster_pb2_grpc.DFMStub(channel)
     return stub
+
+
+def deleteChunkOnDataServer(stub, CID):
+    # 删除成功返回 True， 否则 False
+    return stub.deleteChunkOnDataServer(CID)
+
+
 
 
 if __name__ == '__main__':

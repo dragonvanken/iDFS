@@ -1,7 +1,16 @@
 import grpc
 from protocol import MasterForData_pb2
 from protocol import MasterForData_pb2_grpc
+from protocol import DataForMaster_pb2
+from protocol import DataForMaster_pb2_grpc
+
 from datalib import StoreManager
+
+class DFM(DataForMaster_pb2_grpc.DFMServicer):
+    def deleteChunkOnDataServer(self, request, context):
+        pass
+
+
 
 
 def register():
