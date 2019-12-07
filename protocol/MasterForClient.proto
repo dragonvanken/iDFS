@@ -19,6 +19,13 @@ service MFC {
     //服务：客户获取文件信息并申请Data Server以供文件下载
     //请求：预下载文件在DFS中存放路径
     //返回：状态码、分配的下载服务器（Data Server）信息、文件分块信息
+
+
+    //事物：文件删除
+    //服务：客户删除指定路径下的某个文件
+    //请求：无内容请求
+    //返回：状态码
+    rpc deleteFile(DeleteFile) returns (ACK) {}
 }
 
 //无参数
@@ -43,4 +50,13 @@ message getChunkInfoAndAllocatedDataServerRequest{
      int32 StoreDID = 5; // 存储服务器编号
      string ip =6;
      int32 port = 7;
+}
+
+message DeleteFile{
+    string path = 1;    //要删除的文件路径
+    bool isFolder = 2;  //文件信息，是否是文件夹
+}
+
+message ACK{
+    bool feedBack = 1； //成功与否的确认信息
 }
