@@ -45,6 +45,7 @@ class AFile:
         for item in self.ChunkList:
             if item.getChunkId() == cid:
                 return item
+        return None
 
     def getChunkList(self):
         return self.ChunkList
@@ -75,6 +76,9 @@ class FileManager:
         self.FileSystem.setdefault(newFile.getFID(),newFile)
         return newFile
 
+    def getNewCID(self):
+        self.CIDcout += 1
+        return self.CIDcout
     # 按ID查找
     def FindByFID(self,fid):
         return self.FileSystem.get(fid)
@@ -96,6 +100,8 @@ class FileManager:
 
     # 按照寻找
     def getChunk(self,fid,cid):
+        if not fid in self.FileSystem:
+            return None
         return self.FindByFID(fid).getChunk(cid)
     # 注册
     def RegistUp(self,ip,port):

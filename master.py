@@ -118,7 +118,30 @@ def startbackup():
         cid = task[1]
         isCreatTask = task[2]
         if isCreatTask:
-            FileManager.sys.seekChunk(fid, cid)
+            achunk = FileManager.sys.getChunk(fid, cid)
+            if achunk is None:
+                continue
+            did = achunk.getDataserverID()
+
+            newchunk = achunk
+            newcid = FileManager.sys.getNewCID()
+            newdid = FileManager.sys.FindDataServer()
+            newchunk.setCID(newcid)
+            newchunk.setDID(newdid)
+            newip, newport = FileManager.sys.SeekSocket(newdid)
+            try:
+                stub = ConnectDataServer(did)
+                # send infomation to dataserver(ip,port) copy cid-chunk to newdataserver(newip,newport) as newcid-chunk
+                Backup.BackupManager.end(cid,newchunk)
+            except:
+                print(str(cid)+' backup failed!')
+        else:
+            bq = Backup.BackupManager.getAbackupQue(cid)
+            for achunk in bq:
+                adid = achunk.getDataserverID()
+                stub = ConnectDataServer(adid)
+                deleteChunkOnDataServer(stub,achunk.getChunkID)
+            Backup.BackupManager.end(cid)
 
 def ConnectDataServer(DID):
     ip, port = FileManager.sys.SeekSocket(DID)
