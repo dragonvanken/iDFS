@@ -5,8 +5,6 @@ from protocol import MasterForData_pb2
 from protocol import MasterForData_pb2_grpc
 from protocol import DataForMaster_pb2
 from protocol import DataForMaster_pb2_grpc
-
-
 from protocol import DataForClient_pb2
 from protocol import DataForClient_pb2_grpc
 from utility import chunk
@@ -21,7 +19,25 @@ class DFM(DataForMaster_pb2_grpc.DFMServicer):
 
     def copyChunkBetweenDataServer(self, request, context):
         cid = request.CID
-        response = DataForMaster_pb2.ACK1(feedback=StoreManager.StoreManager.aborted(cid))
+        address = request.newip + ':' + str(request.newport)
+        cchunk = StoreManager.StoreManager.get(cid)
+        cchunk.setCID(request.newcid)
+        channel = grpc.insecure_channel(address)
+        stub = DataForClient_pb2_grpc.DFCStub(channel)
+        metadata = DataForClient_pb2.MetaData(
+            ChunkSize=cchunk.ChunkSize,
+            ChunkId=cchunk.getChunkId(),
+            inFID=cchunk.getFileID(),
+            offset=cchunk.getOffset(),
+            StoreDID=cchunk.getDataserverID()
+        )
+        package = DataForClient_pb2.copyChunkRequest(metadata=metadata, chunk=cchunk.getContent())
+        answer = stub.copyChunk(package)
+        channel.close()
+        if answer.Msg == 'ok':
+            response = DataForMaster_pb2.ACK1(feedback=True)
+        else:
+            response= DataForMaster_pb2.ACK1(feedback=False)
         return response
 
 class DFC(DataForClient_pb2_grpc.DFCServicer):
@@ -38,6 +54,22 @@ class DFC(DataForClient_pb2_grpc.DFCServicer):
         print(cchunk.ChunkId, 'Done!')
         return DataForClient_pb2.uploadChunkResponse(
             Msg = 'Good!'
+        )
+
+    def copyChunk(self, request, context):
+        cchunk = chunk.chunk()
+        metadata = request.metadata
+        content = request.chunk
+        cchunk.ChunkSize = metadata.ChunkSize
+        cchunk.ChunkId = metadata.ChunkId
+        cchunk.inFID = metadata.inFID
+        cchunk.offset = metadata.offset
+        cchunk.StoreDID = StoreManager.StoreManager.getDID()
+        cchunk.Content = content
+        StoreManager.StoreManager.store(cchunk,True)
+        print(cchunk.ChunkId, 'Backup Done!')
+        return DataForClient_pb2.copyChunkResponse(
+            Msg='ok'
         )
 
 def getEthIp():
