@@ -41,8 +41,16 @@ class AFile:
     def getpath(self):
         return self.path
 
+    def vote(self, cid,res):
+        self.voter.append((cid,res))
+        if len(self.voter) == len(self.ChunkList):
+            self.voter.clear()
+            return True
+        else:
+            return False
     # def getChunkList(self):
     #     return self.ChunkList
+
 
 class FileManager:
     def __init__(self):
@@ -99,6 +107,10 @@ class FileManager:
     # 注销
     def LogOut(self,did):
         return sys.Register.deleterow(did)
+
+    def vote(self,fid,cid,res):
+        if self.FindByFID(fid).vote(cid.res):
+            self.commitFile.append(fid)
 
 sys = FileManager()
 
