@@ -79,6 +79,7 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
                     response = deleteChunkOnDataServer(ConnectDataServer(did), cid)
                     if response.feedback:
                         msg2 += 1
+                    Backup.BackupManager.insertDeleteTask(chunk.getFileID(),cid)
                 if msg2 == len(chunkList):
                     msg1 += 1
                 else: break
