@@ -64,7 +64,7 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
         except:
             return MasterForClient_pb2.ACK(
                 msg='Oops, no such directory or file',
-                feedBack=False
+                feedBack = False
             )
 
         msg0 = filetree.FileTree.removeNode(FilePath)
@@ -78,6 +78,7 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
                 response = deleteChunkOnDataServer(ConnectDataServer(did), cid)
                 if response.feedback:
                     msg2 += 1
+                Backup.BackupManager.insertDeleteTask(chunk.getFileID(),cid)
             if msg2 == len(chunkList):
                 msg1 += 1
             else: break
