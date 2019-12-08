@@ -2,8 +2,8 @@ import grpc
 from termcolor import colored
 from protocol import MasterForClient_pb2
 from protocol import MasterForClient_pb2_grpc
-from protocol import DataForClient_pb2
-from protocol import DataForClient_pb2_grpc
+# from protocol import DataForClient_pb2
+# from protocol import DataForClient_pb2_grpc
 from utility import filetree
 from utility import chunk
 import atexit

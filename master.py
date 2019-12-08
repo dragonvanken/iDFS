@@ -60,17 +60,17 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
         msg0 = msg1 = 0
         listToDelete = []
         try:
-            listToDelete = filetree.Tree.getNodes(FilePath)
+            listToDelete = filetree.FileTree.getNodes(FilePath)
         except:
             return MasterForClient_pb2.ACK(
                 msg='Oops, no such directory or file',
                 feedback=False
             )
 
-        msg0 = filetree.Tree.removeNode(FilePath)
+        msg0 = filetree.FileTree.removeNode(FilePath)
         for fileName in listToDelete:
             msg2 = 0
-            fileForFID = FileManager.FileManager.FindByFilenama(fileName)
+            fileForFID = FileManager.sys.FindByFilenama(fileName)
             chunkList  = fileForFID.getChunkList()
             for chunk in chunkList:
                 did = chunk.getDataserverID()
@@ -80,7 +80,7 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
             if msg2 == len(chunkList):
                 msg1 += 1
             else: break
-            FileManager.FileManager.DeleteFile(fileForFID.getFID())
+            FileManager.sys.DeleteFile(fileForFID.getFID())
 
         if msg0 and msg1 == len(listToDelete):
             return MasterForClient_pb2.ACK(
@@ -108,8 +108,8 @@ def serve():
 
 
 def ConnectDataServer(DID):
-    ip, port = FileManager.FileManager.SeekSocket(DID)
-    channel = grpc.insecure_channel(ip + str(port))
+    ip, port = FileManager.sys.SeekSocket(DID)
+    channel = grpc.insecure_channel(ip + ':' + str(port))
     stub = DataForMaster_pb2_grpc.DFMStub(channel)
     return stub
 
@@ -121,4 +121,9 @@ def deleteChunkOnDataServer(stub, CID):
 
 if __name__ == '__main__':
     filetree.FileTree.setroot(filetree.AbstractNode('root', True))
+    filetree.FileTree.insertNode('root/ppppp', 1)
+    filetree.FileTree.insertNode('root/qqq', 1)
+    filetree.FileTree.insertNode('root/qqq/wanPijia1', 0)
+    filetree.FileTree.insertNode('root/qqq/wanPijia2', 0)
+    filetree.FileTree.insertNode('root/ppppp/qwertyu', 0)
     serve()

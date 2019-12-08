@@ -187,6 +187,7 @@ class Tree:
                 cur_note = cur_note.brother
             else:
                 cur_note = stack.pop(0)
+                
     def print_tree(self):
         tmp = AbstractNode('tmp', True)
         tmp.child = self.root
