@@ -41,6 +41,11 @@ class AFile:
     def getpath(self):
         return self.path
 
+    def getChunk(self, cid):
+        for item in self.ChunkList:
+            if item.getChunkId() == cid:
+                return item
+
     def getChunkList(self):
         return self.ChunkList
 
@@ -88,6 +93,10 @@ class FileManager:
     # 寻找文件块最少的服务器
     def FindDataServer(self):
         return self.Register.BestDataserver()
+
+    # 按照寻找
+    def getChunk(self,fid,cid):
+        return self.FindByFID(fid).getChunk(cid)
     # 注册
     def RegistUp(self,ip,port):
         return sys.Register.setrow(Register.HeadRegister().set(ip,port))

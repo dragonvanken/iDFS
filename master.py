@@ -105,9 +105,20 @@ def serve():
     try:
         while True:
             time.sleep(60)  # one day in seconds 60*60*24
+            startbackup()
     except KeyboardInterrupt:
         server.stop(0)
 
+def startbackup():
+    while True:
+        task = Backup.BackupManager.start()
+        if task is None:
+            break
+        fid = task[0]
+        cid = task[1]
+        isCreatTask = task[2]
+        if isCreatTask:
+            FileManager.sys.seekChunk(fid, cid)
 
 def ConnectDataServer(DID):
     ip, port = FileManager.sys.SeekSocket(DID)
