@@ -75,7 +75,8 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
             for chunk in chunkList:
                 did = chunk.getDataserverID()
                 cid = chunk.getChunkId()
-                if deleteChunkOnDataServer(ConnectDataServer(did), cid):
+                response = deleteChunkOnDataServer(ConnectDataServer(did), cid)
+                if response.feedback:
                     msg2 += 1
             if msg2 == len(chunkList):
                 msg1 += 1

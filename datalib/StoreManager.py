@@ -39,13 +39,15 @@ class StoreManage:
             if not cid in self.UsedChunk:
                 return False
             else:
-                self.UsedChunk.pop(cid)
+                aachunk = self.UsedChunk.pop(cid)
+                chunk.removechunk(aachunk)
                 return True
         else:
             if not cid in self.TmpChunk:
                 return False
             else:
-                self.TmpChunk.pop(cid)
+                aachunk = self.TmpChunk.pop(cid)
+                chunk.removechunk(aachunk)
                 return True
 
     def setDID(self,did):

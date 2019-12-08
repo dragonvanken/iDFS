@@ -17,7 +17,8 @@ class DFM(DataForMaster_pb2_grpc.DFMServicer):
     def deleteChunkOnDataServer(self, request, context):
         cid = request.CID
         print('delete in ds')
-        return StoreManager.StoreManager.aborted(cid)
+        response = DataForMaster_pb2.ACK1(feedback = StoreManager.StoreManager.aborted(cid))
+        return response
 
 def getEthIp():
     """返回本机局域网IP地址(str)"""
@@ -63,6 +64,7 @@ def serve():
     ip, port = register()
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=30))
     DataForClient_pb2_grpc.add_DFCServicer_to_server(DFC(), server)
+    DataForMaster_pb2_grpc.add_DFMServicer_to_server(DFM(),server)
     server.add_insecure_port('[::]:' + str(port))
     server.start()
     server.wait_for_termination()
