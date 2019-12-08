@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x13\x44\x61taForClient.proto\"_\n\x08MetaData\x12\x11\n\tChunkSize\x18\x01 \x01(\x05\x12\x0f\n\x07\x43hunkId\x18\x02 \x01(\x05\x12\r\n\x05inFID\x18\x03 \x01(\x05\x12\x0e\n\x06offset\x18\x04 \x01(\x05\x12\x10\n\x08StoreDID\x18\x05 \x01(\x05\"@\n\x12uploadChunkRequest\x12\x1b\n\x08metadata\x18\x01 \x01(\x0b\x32\t.MetaData\x12\r\n\x05\x63hunk\x18\x02 \x01(\x0c\"\"\n\x13uploadChunkResponse\x12\x0b\n\x03Msg\x18\x01 \x01(\t2A\n\x03\x44\x46\x43\x12:\n\x0buploadChunk\x12\x13.uploadChunkRequest\x1a\x14.uploadChunkResponse\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x13\x44\x61taForClient.proto\"_\n\x08MetaData\x12\x11\n\tChunkSize\x18\x01 \x01(\x05\x12\x0f\n\x07\x43hunkId\x18\x02 \x01(\x05\x12\r\n\x05inFID\x18\x03 \x01(\x05\x12\x0e\n\x06offset\x18\x04 \x01(\x05\x12\x10\n\x08StoreDID\x18\x05 \x01(\x05\"@\n\x12uploadChunkRequest\x12\x1b\n\x08metadata\x18\x01 \x01(\x0b\x32\t.MetaData\x12\r\n\x05\x63hunk\x18\x02 \x01(\x0c\"\"\n\x13uploadChunkResponse\x12\x0b\n\x03Msg\x18\x01 \x01(\t\"\"\n\x0f\x64ownloadRequest\x12\x0f\n\x07\x43hunkId\x18\x02 \x01(\x05\"9\n\x0b\x64\x61taOfChunk\x12\x1b\n\x08metadata\x18\x01 \x01(\x0b\x32\t.MetaData\x12\r\n\x05\x63hunk\x18\x02 \x01(\x0c\">\n\x10\x63opyChunkRequest\x12\x1b\n\x08metadata\x18\x01 \x01(\x0b\x32\t.MetaData\x12\r\n\x05\x63hunk\x18\x02 \x01(\x0c\" \n\x11\x63opyChunkResponse\x12\x0b\n\x03Msg\x18\x01 \x01(\t2\xaa\x01\n\x03\x44\x46\x43\x12:\n\x0buploadChunk\x12\x13.uploadChunkRequest\x1a\x14.uploadChunkResponse\"\x00\x12\x31\n\rdownloadChunk\x12\x10.downloadRequest\x1a\x0c.dataOfChunk\"\x00\x12\x34\n\tcopyChunk\x12\x11.copyChunkRequest\x1a\x12.copyChunkResponse\"\x00\x62\x06proto3')
 )
 
 
@@ -153,10 +153,154 @@ _UPLOADCHUNKRESPONSE = _descriptor.Descriptor(
   serialized_end=220,
 )
 
+
+_DOWNLOADREQUEST = _descriptor.Descriptor(
+  name='downloadRequest',
+  full_name='downloadRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='ChunkId', full_name='downloadRequest.ChunkId', index=0,
+      number=2, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=222,
+  serialized_end=256,
+)
+
+
+_DATAOFCHUNK = _descriptor.Descriptor(
+  name='dataOfChunk',
+  full_name='dataOfChunk',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='metadata', full_name='dataOfChunk.metadata', index=0,
+      number=1, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='chunk', full_name='dataOfChunk.chunk', index=1,
+      number=2, type=12, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b(""),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=258,
+  serialized_end=315,
+)
+
+
+_COPYCHUNKREQUEST = _descriptor.Descriptor(
+  name='copyChunkRequest',
+  full_name='copyChunkRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='metadata', full_name='copyChunkRequest.metadata', index=0,
+      number=1, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='chunk', full_name='copyChunkRequest.chunk', index=1,
+      number=2, type=12, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b(""),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=317,
+  serialized_end=379,
+)
+
+
+_COPYCHUNKRESPONSE = _descriptor.Descriptor(
+  name='copyChunkResponse',
+  full_name='copyChunkResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='Msg', full_name='copyChunkResponse.Msg', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=381,
+  serialized_end=413,
+)
+
 _UPLOADCHUNKREQUEST.fields_by_name['metadata'].message_type = _METADATA
+_DATAOFCHUNK.fields_by_name['metadata'].message_type = _METADATA
+_COPYCHUNKREQUEST.fields_by_name['metadata'].message_type = _METADATA
 DESCRIPTOR.message_types_by_name['MetaData'] = _METADATA
 DESCRIPTOR.message_types_by_name['uploadChunkRequest'] = _UPLOADCHUNKREQUEST
 DESCRIPTOR.message_types_by_name['uploadChunkResponse'] = _UPLOADCHUNKRESPONSE
+DESCRIPTOR.message_types_by_name['downloadRequest'] = _DOWNLOADREQUEST
+DESCRIPTOR.message_types_by_name['dataOfChunk'] = _DATAOFCHUNK
+DESCRIPTOR.message_types_by_name['copyChunkRequest'] = _COPYCHUNKREQUEST
+DESCRIPTOR.message_types_by_name['copyChunkResponse'] = _COPYCHUNKRESPONSE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 MetaData = _reflection.GeneratedProtocolMessageType('MetaData', (_message.Message,), {
@@ -180,6 +324,34 @@ uploadChunkResponse = _reflection.GeneratedProtocolMessageType('uploadChunkRespo
   })
 _sym_db.RegisterMessage(uploadChunkResponse)
 
+downloadRequest = _reflection.GeneratedProtocolMessageType('downloadRequest', (_message.Message,), {
+  'DESCRIPTOR' : _DOWNLOADREQUEST,
+  '__module__' : 'DataForClient_pb2'
+  # @@protoc_insertion_point(class_scope:downloadRequest)
+  })
+_sym_db.RegisterMessage(downloadRequest)
+
+dataOfChunk = _reflection.GeneratedProtocolMessageType('dataOfChunk', (_message.Message,), {
+  'DESCRIPTOR' : _DATAOFCHUNK,
+  '__module__' : 'DataForClient_pb2'
+  # @@protoc_insertion_point(class_scope:dataOfChunk)
+  })
+_sym_db.RegisterMessage(dataOfChunk)
+
+copyChunkRequest = _reflection.GeneratedProtocolMessageType('copyChunkRequest', (_message.Message,), {
+  'DESCRIPTOR' : _COPYCHUNKREQUEST,
+  '__module__' : 'DataForClient_pb2'
+  # @@protoc_insertion_point(class_scope:copyChunkRequest)
+  })
+_sym_db.RegisterMessage(copyChunkRequest)
+
+copyChunkResponse = _reflection.GeneratedProtocolMessageType('copyChunkResponse', (_message.Message,), {
+  'DESCRIPTOR' : _COPYCHUNKRESPONSE,
+  '__module__' : 'DataForClient_pb2'
+  # @@protoc_insertion_point(class_scope:copyChunkResponse)
+  })
+_sym_db.RegisterMessage(copyChunkResponse)
+
 
 
 _DFC = _descriptor.ServiceDescriptor(
@@ -188,8 +360,8 @@ _DFC = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=222,
-  serialized_end=287,
+  serialized_start=416,
+  serialized_end=586,
   methods=[
   _descriptor.MethodDescriptor(
     name='uploadChunk',
@@ -198,6 +370,24 @@ _DFC = _descriptor.ServiceDescriptor(
     containing_service=None,
     input_type=_UPLOADCHUNKREQUEST,
     output_type=_UPLOADCHUNKRESPONSE,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='downloadChunk',
+    full_name='DFC.downloadChunk',
+    index=1,
+    containing_service=None,
+    input_type=_DOWNLOADREQUEST,
+    output_type=_DATAOFCHUNK,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='copyChunk',
+    full_name='DFC.copyChunk',
+    index=2,
+    containing_service=None,
+    input_type=_COPYCHUNKREQUEST,
+    output_type=_COPYCHUNKRESPONSE,
     serialized_options=None,
   ),
 ])

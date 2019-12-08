@@ -14,6 +14,10 @@ service DFC {
     //返回：chunk块
     rpc downloadChunk(downloadRequest) returns (dataOfChunk) {}
 
+     //服务：服务器复制chunk到新的Data Server
+    //请求：chunk快
+    //返回：无
+    rpc copyChunk(copyChunkRequest) returns (copyChunkResponse){}
 }
 
 message MetaData{
@@ -41,4 +45,13 @@ message downloadRequest{
 message dataOfChunk{
     MetaData metadata = 1;
     bytes chunk = 2;
+}
+
+message copyChunkRequest{
+    MetaData metadata = 1;
+    bytes chunk = 2;
+}
+
+message copyChunkResponse{
+    string Msg = 1;
 }

@@ -16,24 +16,13 @@ from datalib import StoreManager
 class DFM(DataForMaster_pb2_grpc.DFMServicer):
     def deleteChunkOnDataServer(self, request, context):
         cid = request.CID
-        print('delete in ds')
         response = DataForMaster_pb2.ACK1(feedback = StoreManager.StoreManager.aborted(cid))
         return response
 
-def getEthIp():
-    """返回本机局域网IP地址(str)"""
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("8.8.8.8", 80))
-    return s.getsockname()[0]
-
-def getOpenPort():
-    """选取一个空闲的端口并返回端口号(int)"""
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.bind(("",0))
-    s.listen(1)
-    port = s.getsockname()[1]
-    s.close()
-    return int(port)
+    def copyChunkBetweenDataServer(self, request, context):
+        cid = request.CID
+        response = DataForMaster_pb2.ACK1(feedback=StoreManager.StoreManager.aborted(cid))
+        return response
 
 class DFC(DataForClient_pb2_grpc.DFCServicer):
     def uploadChunk(self, request, context):
@@ -50,6 +39,21 @@ class DFC(DataForClient_pb2_grpc.DFCServicer):
         return DataForClient_pb2.uploadChunkResponse(
             Msg = 'Good!'
         )
+
+def getEthIp():
+    """返回本机局域网IP地址(str)"""
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    return s.getsockname()[0]
+
+def getOpenPort():
+    """选取一个空闲的端口并返回端口号(int)"""
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.bind(("",0))
+    s.listen(1)
+    port = s.getsockname()[1]
+    s.close()
+    return int(port)
 
 def register():
     channel = grpc.insecure_channel('localhost:50051')
