@@ -19,6 +19,7 @@ service MFC {
     //服务：客户获取文件信息并申请Data Server以供文件下载
     //请求：预下载文件在DFS中存放路径
     //返回：状态码、分配的下载服务器（Data Server）信息、文件分块信息
+    rpc requestDownloadFromMaster(downloadRequestInfo) returns (stream targetInfo) {}
 
 
     //事物：文件删除
@@ -60,4 +61,16 @@ message FilePath{
 message ACK{
     bool feedBack = 1; //成功与否的确认信息
     string msg = 2;    //返回信息
+}
+
+message downloadRequestInfo{
+    string path = 1;    //向master请求下载文件的路径
+}
+
+// client用以向dataServer请求下载
+message targetInfo{
+    string ip = 1;      //dataServer的地址
+    int32 port = 2;     //dataServer的端口
+    int32 ChunkSize = 3;
+    int32 ChunkId = 4;
 }
