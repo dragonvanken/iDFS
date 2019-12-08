@@ -68,7 +68,7 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
             )
 
         msg0 = filetree.FileTree.removeNode(FilePath)
-        if not listToDelete:
+        if listToDelete:
             for fileName in listToDelete:
                 msg2 = 0
                 fileForFID = FileManager.sys.FindByFilenama(fileName)
