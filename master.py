@@ -60,7 +60,7 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
         msg0 = msg1 = 0
         listToDelete = []
         try:
-            listToDelete = filetree.FileTree.getNodes(FilePath)
+            listToDelete = filetree.FileTree.getLeafNodes(FilePath)
         except:
             return MasterForClient_pb2.ACK(
                 msg='Oops, no such directory or file',
@@ -68,21 +68,21 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
             )
 
         msg0 = filetree.FileTree.removeNode(FilePath)
-        for fileName in listToDelete:
-            msg2 = 0
-            fileForFID = FileManager.sys.FindByFilenama(fileName)
-            chunkList  = fileForFID.getChunkList()
-            for chunk in chunkList:
-                did = chunk.getDataserverID()
-                cid = chunk.getChunkId()
-                response = deleteChunkOnDataServer(ConnectDataServer(did), cid)
-                if response.feedback:
-                    msg2 += 1
-            if msg2 == len(chunkList):
-                msg1 += 1
-            else: break
-            FileManager.sys.DeleteFile(fileForFID.getFID())
-            print('fsys delete suc')
+        if not listToDelete:
+            for fileName in listToDelete:
+                msg2 = 0
+                fileForFID = FileManager.sys.FindByFilenama(fileName)
+                chunkList  = fileForFID.getChunkList()
+                for chunk in chunkList:
+                    did = chunk.getDataserverID()
+                    cid = chunk.getChunkId()
+                    response = deleteChunkOnDataServer(ConnectDataServer(did), cid)
+                    if response.feedback:
+                        msg2 += 1
+                if msg2 == len(chunkList):
+                    msg1 += 1
+                else: break
+                FileManager.sys.DeleteFile(fileForFID.getFID())
         if msg0 and msg1 == len(listToDelete):
             return MasterForClient_pb2.ACK(
                 msg='Successful!',
@@ -125,12 +125,12 @@ def deleteChunkOnDataServer(stub, CID):
 
 if __name__ == '__main__':
     filetree.FileTree.setroot(filetree.AbstractNode('root', True))
-    filetree.FileTree.insertNode('root/ppppp', 1)
+    filetree.FileTree.insertNode('root/p', 1)
     filetree.FileTree.insertNode('root/qqq', 1)
     filetree.FileTree.insertNode('root/qqq/wanPijia1', 0)
     filetree.FileTree.insertNode('root/qqq/wanPijia2', 0)
-    filetree.FileTree.insertNode('root/ppppp/qwertyu', 0)
-    newFile = FileManager.sys.CreateFile('root/ppppp/qwertyu',1024 * 1000)
+    filetree.FileTree.insertNode('root/p/qwe', 0)
+    newFile = FileManager.sys.CreateFile('root/p/qwe',1024 * 1000)
     FileManager.sys.FileSystem[newFile.getFID()].ChunkList[0].setCID(777)
     FileManager.sys.FileSystem[newFile.getFID()].ChunkList[0].setDID(1)
     serve()
