@@ -56,7 +56,7 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
 
     def deleteFile(self, request, context):
         FilePath = request.path
-        isFolder = request.isFolder
+        # isFolder = request.isFolder
         msg0 = msg1 = 0
         listToDelete = []
         try:
@@ -64,7 +64,7 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
         except:
             return MasterForClient_pb2.ACK(
                 msg='Oops, no such directory or file',
-                feedback=False
+                feedBack=False
             )
 
         msg0 = filetree.FileTree.removeNode(FilePath)
@@ -85,12 +85,12 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
         if msg0 and msg1 == len(listToDelete):
             return MasterForClient_pb2.ACK(
                 msg='Successful!',
-                feedback=True
+                feedBack=True
             )
         else:
             return MasterForClient_pb2.ACK(
                 msg='Failed!',
-                feedback=False
+                feedBack=False
             )
 
 
@@ -116,7 +116,10 @@ def ConnectDataServer(DID):
 
 def deleteChunkOnDataServer(stub, CID):
     # 删除成功返回 True， 否则 False
-    return stub.deleteChunkOnDataServer(CID)
+    pakage = DataForMaster_pb2.chunkID(
+        CID=CID
+    )
+    return stub.deleteChunkOnDataServer(pakage)
 
 
 if __name__ == '__main__':
