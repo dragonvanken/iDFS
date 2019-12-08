@@ -20,6 +20,11 @@ class DFMStub(object):
         request_serializer=DataForMaster__pb2.chunkID.SerializeToString,
         response_deserializer=DataForMaster__pb2.ACK1.FromString,
         )
+    self.copyChunkBetweenDataServer = channel.unary_unary(
+        '/DFM/copyChunkBetweenDataServer',
+        request_serializer=DataForMaster__pb2.copyChunk.SerializeToString,
+        response_deserializer=DataForMaster__pb2.ACK1.FromString,
+        )
 
 
 class DFMServicer(object):
@@ -37,12 +42,27 @@ class DFMServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
+  def copyChunkBetweenDataServer(self, request, context):
+    """事物：异常处理、备份
+    服务：chunk从服务器复制到别的服务器上
+    请求：将被复制的cid，发往新的服务器ip，port，新的cid
+    返回：状态码
+    """
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
 
 def add_DFMServicer_to_server(servicer, server):
   rpc_method_handlers = {
       'deleteChunkOnDataServer': grpc.unary_unary_rpc_method_handler(
           servicer.deleteChunkOnDataServer,
           request_deserializer=DataForMaster__pb2.chunkID.FromString,
+          response_serializer=DataForMaster__pb2.ACK1.SerializeToString,
+      ),
+      'copyChunkBetweenDataServer': grpc.unary_unary_rpc_method_handler(
+          servicer.copyChunkBetweenDataServer,
+          request_deserializer=DataForMaster__pb2.copyChunk.FromString,
           response_serializer=DataForMaster__pb2.ACK1.SerializeToString,
       ),
   }
