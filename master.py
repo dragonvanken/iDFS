@@ -157,6 +157,14 @@ def deleteChunkOnDataServer(stub, CID):
     )
     return stub.deleteChunkOnDataServer(pakage)
 
+def copyChunkBetweenDataServer(stub,CID,copyip,copyport,copycid):
+    response = stub.addbackup(DataForMaster_pb2.addbackupRequest(
+        mycid = CID,
+        copyip= copyip,
+        copyport=copyport,
+        copycid= copycid
+    ))
+    return response.iswrite
 
 if __name__ == '__main__':
     filetree.FileTree.setroot(filetree.AbstractNode('root', True))

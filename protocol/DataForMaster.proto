@@ -9,9 +9,19 @@ service DFM {
     //请求：chunkID
     //返回：状态码
     rpc deleteChunkOnDataServer(chunkID) returns (ACK1) {}
+    //事物：异常处理、备份
+    //服务：chunk从服务器复制到别的服务器上
+    //请求：将被复制的cid，发往新的服务器ip，port，新的cid
+    //返回：状态码
+    rpc copyChunkBetweenDataServer(copyChunk) returns (ACK1) {}
 }
 
-
+message copyChunk {
+    int32 CID = 1;
+    string copyip = 2;
+    int32 copyport = 3;
+    int32 copycid = 4;
+}
 
 message chunkID {
     int32 CID = 1; 
