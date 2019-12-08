@@ -3,23 +3,21 @@ import socket
 from concurrent import futures
 from protocol import MasterForData_pb2
 from protocol import MasterForData_pb2_grpc
-<<<<<<< HEAD
 from protocol import DataForMaster_pb2
 from protocol import DataForMaster_pb2_grpc
 
-from datalib import StoreManager
 
-class DFM(DataForMaster_pb2_grpc.DFMServicer):
-    def deleteChunkOnDataServer(self, request, context):
-        pass
-
-
-
-=======
 from protocol import DataForClient_pb2
 from protocol import DataForClient_pb2_grpc
 from utility import chunk
 from datalib import StoreManager
+
+
+class DFM(DataForMaster_pb2_grpc.DFMServicer):
+    def deleteChunkOnDataServer(self, request, context):
+        cid = request.CID
+        print('delete in ds')
+        return StoreManager.StoreManager.aborted(cid)
 
 def getEthIp():
     """返回本机局域网IP地址(str)"""
@@ -51,7 +49,6 @@ class DFC(DataForClient_pb2_grpc.DFCServicer):
         return DataForClient_pb2.uploadChunkResponse(
             Msg = 'Good!'
         )
->>>>>>> a5ba54a996c14d027109d17e0d53f33168cd954f
 
 def register():
     channel = grpc.insecure_channel('localhost:50051')
@@ -71,5 +68,9 @@ def serve():
     server.wait_for_termination()
 
 if __name__ == '__main__':
+    achunk = chunk.chunk()
+    achunk.setCID(777)
+    achunk.setContent('are you ok?')
+    StoreManager.StoreManager.store(achunk,True)
     serve()
     print(StoreManager.StoreManager.getDID())

@@ -93,12 +93,14 @@ def user_interface():
     fetch(stub)
     while(True):
         print(colored("\nPlease input command:", 'green'), end='')
-        cmd = input()
-        if cmd.lower() == 'fetch':
+        cmd = input().lower().strip()
+        if cmd == 'fetch':
             fetch(stub)
-        if cmd.lower() == 'update':
+        if cmd == 'update':
             update(stub)
-        elif cmd.lower() == 'quit' or cmd == 'exit':
+        if cmd == 'delete':
+            deleteFile(stub)
+        elif cmd == 'quit' or cmd == 'exit':
             exit(0)
         else:
             print('Invalid command. Please retry.')
@@ -110,11 +112,12 @@ def ConnectMaster():
 
 def deleteFile(stub):
     toDelete = input('the file to delete: ')
-    ack = stub.deleteFile(toDelete)
-    if ack:
-        print('Delete Finished!')
-    else:
-        print('Houston We Have a Problem --')
+    pakage = MasterForClient_pb2.FilePath(
+        path=toDelete
+    )
+    ack = stub.deleteFile(pakage)
+    print(ack.msg)
+
 
 if __name__ == '__main__':
     user_interface()

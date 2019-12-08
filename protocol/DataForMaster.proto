@@ -8,20 +8,15 @@ service DFM {
     //服务：master删除数据服务器上的chunk
     //请求：chunkID
     //返回：状态码
-    rpc deleteChunkOnDataServer(chunkID) returns (ACK) {}
+    rpc deleteChunkOnDataServer(chunkID) returns (ACK1) {}
 }
 
-message EmptyArg {
-}
 
-message Str{
-    string name = 1;
-}
 
 message chunkID {
     int32 CID = 1; 
 }
 
-message ACK{
+message ACK1{
     bool feedback = 1;
 }

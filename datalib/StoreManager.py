@@ -34,10 +34,19 @@ class StoreManage:
         self.UsedChunk.setdefault(cid,achunk)
         self.TmpChunk.pop(cid)
 
-    def aborted(self, cid):
-        if not cid in self.UsedChunk:
-            return False
-        self.UsedChunk.pop(cid)
+    def aborted(self, cid, used = True):
+        if used:
+            if not cid in self.UsedChunk:
+                return False
+            else:
+                self.UsedChunk.pop(cid)
+                return True
+        else:
+            if not cid in self.TmpChunk:
+                return False
+            else:
+                self.TmpChunk.pop(cid)
+                return True
 
     def setDID(self,did):
         self.DID = did
