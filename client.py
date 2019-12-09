@@ -66,6 +66,9 @@ def getTree(stub):
 
     filetree.FileTree.deseriesFromPath(newtree)
 
+def isUniquePath(destination):
+    return filetree.FileTree.seek(destination) is None
+
 def upload(stub):
     print('uploading')
     """ try:
@@ -73,8 +76,13 @@ def upload(stub):
     except:
         print(colored('Bad connection.', 'red'))
         print(colored('Please retry.', 'red')) """
-    upfile(stub, 'ppp', 'root/ppp')
-    print('Successfully upload file', 'ppp')
+    path = 'ppp'
+    destination = 'root/ppp'
+    if not isUniquePath(destination):
+        print(colored('Unavailable path, please retry.', 'red'))
+    else:
+        upfile(stub, path, destination)
+        print(colored('Successfully upload file '+path+' to '+destination,'green'))
     fetch(stub)
 
 def fetch(stub):
@@ -87,6 +95,20 @@ def fetch(stub):
         print(colored('Bad connection.', 'red'))
         print(colored('Please retry.', 'red'))
 
+def showAllCommands():
+    print('iDFS is a Distribution File System written by WanKeJia group for NUDT distribution system cource.\n')
+    print('All commands:')
+    print('\tfetch:')
+    print('\t\t更新并显示文件目录结构')
+
+    print('\tupload')
+    print('\t\t上传文件')
+
+    print('\tdelete')
+    print('\t\t删除文件')
+
+    print('\tquit or exit')
+    print('\t\t退出系统')
 # 用户端命令行界面
 def user_interface():
     stub = ConnectMaster()
@@ -94,7 +116,9 @@ def user_interface():
     while(True):
         print(colored("\nPlease input command:", 'green'), end='')
         cmd = input().lower().strip()
-        if cmd == 'fetch':
+        if cmd == 'h' or cmd == 'help':
+            showAllCommands()
+        elif cmd == 'fetch':
             fetch(stub)
         elif cmd == 'upload':
             upload(stub)
@@ -117,6 +141,47 @@ def deleteFile(stub):
     )
     ack = stub.deleteFile(pakage)
     print(ack.msg)
+
+
+def requestDownloadFromMaster(stub):
+    toDownload = input('the file to download: ')
+    package = MasterForClient_pb2.downloadRequestInfo(
+        path=toDownload
+    )
+    targetInfo = stub.requestDownloadFromMaster(package)
+    chunknum = 0
+    chunksList = []
+    for chk in targetInfo:
+        if chk.status == -1:
+            print('Houston We Have a Problem --\nNo Such File!')
+            return []
+        # mychunk = chunk.chunk()
+        # mychunk.ChunkSize = chk.ChunkSize
+        # mychunk.setCID(chk.ChunkId)
+        # mychunk.ip = chk.ip
+        # mychunk.port = chk.port
+        # chunknum += 1
+        chunksList.append(chk)
+        # 没有做master发过来chunks的完整性校验
+    return chunksList
+
+
+
+
+def ConnectDataServer(socket):
+    channel = grpc.insecure_channel(socket)
+    stub = DataForClient_pb2_grpc.DFCStub(channel)
+    return stub
+
+def downloadChunk(stub, CID):
+    package = DataForClient_pb2.downloadRequest(
+        ChunkId=CID
+    )
+    chunkData = stub.downloadChunk(package)
+    return chunkData
+
+
+    
 
 
 if __name__ == '__main__':

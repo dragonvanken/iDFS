@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x15MasterForClient.proto\"\n\n\x08\x45mptyArg\"%\n\x03Str\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x10\n\x08isFolder\x18\x02 \x01(\x08\"G\n)getChunkInfoAndAllocatedDataServerRequest\x12\x0c\n\x04size\x18\x01 \x01(\x05\x12\x0c\n\x04path\x18\x02 \x01(\t\"~\n\rChunkStructor\x12\x11\n\tChunkSize\x18\x01 \x01(\x05\x12\x0f\n\x07\x43hunkId\x18\x02 \x01(\x05\x12\r\n\x05inFID\x18\x03 \x01(\x05\x12\x0e\n\x06offset\x18\x04 \x01(\x05\x12\x10\n\x08StoreDID\x18\x05 \x01(\x05\x12\n\n\x02ip\x18\x06 \x01(\t\x12\x0c\n\x04port\x18\x07 \x01(\x05\"*\n\x08\x46ilePath\x12\x0c\n\x04path\x18\x01 \x01(\t\x12\x10\n\x08isFolder\x18\x02 \x01(\x08\"$\n\x03\x41\x43K\x12\x10\n\x08\x66\x65\x65\x64\x42\x61\x63k\x18\x01 \x01(\x08\x12\x0b\n\x03msg\x18\x02 \x01(\t2\xb0\x01\n\x03MFC\x12\"\n\x0bgetFiletree\x12\t.EmptyArg\x1a\x04.Str\"\x00\x30\x01\x12\x64\n\"getChunkInfoAndAllocatedDataServer\x12*.getChunkInfoAndAllocatedDataServerRequest\x1a\x0e.ChunkStructor\"\x00\x30\x01\x12\x1f\n\ndeleteFile\x12\t.FilePath\x1a\x04.ACK\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x15MasterForClient.proto\"\n\n\x08\x45mptyArg\"%\n\x03Str\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x10\n\x08isFolder\x18\x02 \x01(\x08\"G\n)getChunkInfoAndAllocatedDataServerRequest\x12\x0c\n\x04size\x18\x01 \x01(\x05\x12\x0c\n\x04path\x18\x02 \x01(\t\"~\n\rChunkStructor\x12\x11\n\tChunkSize\x18\x01 \x01(\x05\x12\x0f\n\x07\x43hunkId\x18\x02 \x01(\x05\x12\r\n\x05inFID\x18\x03 \x01(\x05\x12\x0e\n\x06offset\x18\x04 \x01(\x05\x12\x10\n\x08StoreDID\x18\x05 \x01(\x05\x12\n\n\x02ip\x18\x06 \x01(\t\x12\x0c\n\x04port\x18\x07 \x01(\x05\"*\n\x08\x46ilePath\x12\x0c\n\x04path\x18\x01 \x01(\t\x12\x10\n\x08isFolder\x18\x02 \x01(\x08\"$\n\x03\x41\x43K\x12\x10\n\x08\x66\x65\x65\x64\x42\x61\x63k\x18\x01 \x01(\x08\x12\x0b\n\x03msg\x18\x02 \x01(\t\"#\n\x13\x64ownloadRequestInfo\x12\x0c\n\x04path\x18\x01 \x01(\t\"J\n\ntargetInfo\x12\n\n\x02ip\x18\x01 \x01(\t\x12\x0c\n\x04port\x18\x02 \x01(\x05\x12\x11\n\tChunkSize\x18\x03 \x01(\x05\x12\x0f\n\x07\x43hunkId\x18\x04 \x01(\x05\x32\xf4\x01\n\x03MFC\x12\"\n\x0bgetFiletree\x12\t.EmptyArg\x1a\x04.Str\"\x00\x30\x01\x12\x64\n\"getChunkInfoAndAllocatedDataServer\x12*.getChunkInfoAndAllocatedDataServerRequest\x1a\x0e.ChunkStructor\"\x00\x30\x01\x12\x42\n\x19requestDownloadFromMaster\x12\x14.downloadRequestInfo\x1a\x0b.targetInfo\"\x00\x30\x01\x12\x1f\n\ndeleteFile\x12\t.FilePath\x1a\x04.ACK\"\x00\x62\x06proto3')
 )
 
 
@@ -274,12 +274,97 @@ _ACK = _descriptor.Descriptor(
   serialized_end=357,
 )
 
+
+_DOWNLOADREQUESTINFO = _descriptor.Descriptor(
+  name='downloadRequestInfo',
+  full_name='downloadRequestInfo',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='path', full_name='downloadRequestInfo.path', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=359,
+  serialized_end=394,
+)
+
+
+_TARGETINFO = _descriptor.Descriptor(
+  name='targetInfo',
+  full_name='targetInfo',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='ip', full_name='targetInfo.ip', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='port', full_name='targetInfo.port', index=1,
+      number=2, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='ChunkSize', full_name='targetInfo.ChunkSize', index=2,
+      number=3, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='ChunkId', full_name='targetInfo.ChunkId', index=3,
+      number=4, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=396,
+  serialized_end=470,
+)
+
 DESCRIPTOR.message_types_by_name['EmptyArg'] = _EMPTYARG
 DESCRIPTOR.message_types_by_name['Str'] = _STR
 DESCRIPTOR.message_types_by_name['getChunkInfoAndAllocatedDataServerRequest'] = _GETCHUNKINFOANDALLOCATEDDATASERVERREQUEST
 DESCRIPTOR.message_types_by_name['ChunkStructor'] = _CHUNKSTRUCTOR
 DESCRIPTOR.message_types_by_name['FilePath'] = _FILEPATH
 DESCRIPTOR.message_types_by_name['ACK'] = _ACK
+DESCRIPTOR.message_types_by_name['downloadRequestInfo'] = _DOWNLOADREQUESTINFO
+DESCRIPTOR.message_types_by_name['targetInfo'] = _TARGETINFO
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 EmptyArg = _reflection.GeneratedProtocolMessageType('EmptyArg', (_message.Message,), {
@@ -324,6 +409,20 @@ ACK = _reflection.GeneratedProtocolMessageType('ACK', (_message.Message,), {
   })
 _sym_db.RegisterMessage(ACK)
 
+downloadRequestInfo = _reflection.GeneratedProtocolMessageType('downloadRequestInfo', (_message.Message,), {
+  'DESCRIPTOR' : _DOWNLOADREQUESTINFO,
+  '__module__' : 'MasterForClient_pb2'
+  # @@protoc_insertion_point(class_scope:downloadRequestInfo)
+  })
+_sym_db.RegisterMessage(downloadRequestInfo)
+
+targetInfo = _reflection.GeneratedProtocolMessageType('targetInfo', (_message.Message,), {
+  'DESCRIPTOR' : _TARGETINFO,
+  '__module__' : 'MasterForClient_pb2'
+  # @@protoc_insertion_point(class_scope:targetInfo)
+  })
+_sym_db.RegisterMessage(targetInfo)
+
 
 
 _MFC = _descriptor.ServiceDescriptor(
@@ -332,8 +431,8 @@ _MFC = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=360,
-  serialized_end=536,
+  serialized_start=473,
+  serialized_end=717,
   methods=[
   _descriptor.MethodDescriptor(
     name='getFiletree',
@@ -354,9 +453,18 @@ _MFC = _descriptor.ServiceDescriptor(
     serialized_options=None,
   ),
   _descriptor.MethodDescriptor(
+    name='requestDownloadFromMaster',
+    full_name='MFC.requestDownloadFromMaster',
+    index=2,
+    containing_service=None,
+    input_type=_DOWNLOADREQUESTINFO,
+    output_type=_TARGETINFO,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
     name='deleteFile',
     full_name='MFC.deleteFile',
-    index=2,
+    index=3,
     containing_service=None,
     input_type=_FILEPATH,
     output_type=_ACK,
