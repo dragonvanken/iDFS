@@ -72,7 +72,7 @@ class FileManager:
             newChunk.setCID(self.CIDcout)
             newChunk.setFileInfo(newFile.getFID(),i)
             newChunk.setDID(self.FindDataServer())
-            self.Register.upchunknum(newChunk.getDataserverID(),1)
+            self.upchunkonRegister(newChunk.getDataserverID(),1,newChunk)
             newFile.appendChunk(newChunk)
         self.FileSystem.setdefault(newFile.getFID(),newFile)
         self.show()
@@ -135,18 +135,37 @@ class FileManager:
         ip = sys.Register.getrow(did).getIP()
         port = sys.Register.getrow(did).getport()
         return ip,port
+
+    def SeekChunkOnDid(self,did):
+        allChunk = []
+        for key,item in self.FileSystem.items():
+            list = item.getChunkList()
+            for achunk in list:
+                if achunk.getDataserverID() == did:
+                    allChunk.append(achunk)
+        return allChunk
     # 注销
     def LogOut(self,did):
         row = sys.Register.deleterow(did)
         self.show()
         return row
 
-    def upchunknum(self,key,changeNum):
-        self.Register.upchunknum(key,changeNum)
+    def getalldataserver(self):
+        return self.Register.getalldataserverdid()
+
+    def upchunkonRegister(self,key,changeNum,achunk):
+        self.Register.upchunkondataserver(key,changeNum,achunk)
         self.show()
 
     def uplive(self, key, newAlive):
         self.Register.uplive(key,newAlive)
+        self.show()
+
+    def upMainChunk(self,achunk):
+        fid = achunk.getFileID()
+        cid = achunk.getChunkId()
+        self.FileSystem[fid].deleteChunk(cid)
+        self.FileSystem[fid].appendChunk(achunk)
         self.show()
 
 sys = FileManager()

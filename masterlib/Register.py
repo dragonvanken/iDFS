@@ -5,14 +5,17 @@ class HeadRegister:
         self.Port = 0
         self.alive = 1# 1:live 0:uncertin
         self.chunknumber = 0
+        self.chunklist = []
 
-    def set(self,IP,Port,DID = 0,num =0, alive = 1):
+    def set(self,IP,Port,DID = 0,num =0, list = list,alive = 1):
         self.DID = DID
         self.IP = IP
         self.Port = Port
         self.alive = alive
         self.chunknumber = num
+        self.chunklist = list
         return self
+
     def getDID(self):
         return self.DID
 
@@ -25,6 +28,9 @@ class HeadRegister:
     def getload(self):
         return self.chunknumber
 
+    def getchunklist(self):
+        return self.chunklist
+
     def getstatus(self):
         return self.alive
 
@@ -33,6 +39,12 @@ class HeadRegister:
 
     def setstatus(self,status):
         self.alive = status
+
+    def appendchunklist(self,achunk):
+        self.chunklist.append(achunk)
+
+    def deletechunklist(self,achunk):
+        self.chunklist.remove(achunk)
 
 class Register:
     def __init__(self):
@@ -80,10 +92,14 @@ class Register:
         self.table[key].alive = newAlive
         return 0
 
-    def upchunknum(self,key,changeNum):
+    def upchunkondataserver(self,key,changeNum,achunk):
         if not key in self.table:
             return -1
         self.table[key].chunknumber += changeNum
+        if changeNum > 0:
+            self.table[key].appendchunklist(achunk)
+        else:
+            self.table[key].deletechunklist(achunk)
         return 0
 
     def BestDataserver(self):
@@ -97,6 +113,8 @@ class Register:
                 minvalue = rows.chunknumber
         return mindid
 
+    def getalldataserverdid(self):
+        return self.table.keys()
 
 if __name__ == '__main__':
     RegisteTable = Register()
@@ -106,4 +124,5 @@ if __name__ == '__main__':
     row1.set("6.7.8.9", 3000)
     t0= RegisteTable.setrow(row0)
     t1= RegisteTable.setrow(row1)
-    print (RegisteTable.BestDataserver())
+    t = RegisteTable.getalldataserverdid()
+    print (t)
