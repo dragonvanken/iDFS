@@ -9,6 +9,7 @@ from utility import chunk
 import atexit
 import multiprocessing
 import threading
+import time
 
 
 def SendChunkToDataserver(args):
@@ -52,9 +53,12 @@ def upfile(stub, sourcepath, destination):
         address.append(str(ip)+':'+str(port))
         allchunk.append(chunks)
 
-    with multiprocessing.Pool(4) as p:
-        results = p.map(SendChunkToDataserver, zip(address,allchunk))
-    print('update ok')
+    """ with multiprocessing.Pool(4) as p:
+        results = p.map(SendChunkToDataserver, zip(address,allchunk)) """
+    results = []
+    for i in range(len(allchunk)):
+        results.append(SendChunkToDataserver((address[i],allchunk[i])))
+    print('upload ok')
     print(results)
 
 def getTree(stub):
@@ -84,7 +88,6 @@ def upload(stub, cur_node, user_input):
     else:
         upfile(stub, path, destination)
         print(colored('Successfully upload file '+path+' to '+destination,'green'))
-    fetch(stub)
 
 def fetch(stub):
     print('Fetching remote information.')
@@ -177,6 +180,8 @@ def user_interface():
             upload(stub, cur_node, user_input)
         elif cmd == 'delete':
             deleteFile(stub)
+        elif cmd == 'download':
+            downloadFile(stub)
         elif cmd == 'quit' or cmd == 'exit':
             exit(0)
         else:
@@ -196,6 +201,45 @@ def deleteFile(stub):
     print(ack.msg)
 
 
+def requestDownloadFromMaster(stub, toDownload):
+    package = MasterForClient_pb2.downloadRequestInfo(
+        path=toDownload
+    )
+    targetInfo = stub.requestDownloadFromMaster(package)
+    return targetInfo
+
+def ConnectDataServer(socket):
+    channel = grpc.insecure_channel(socket)
+    stub = DataForClient_pb2_grpc.DFCStub(channel)
+    return stub
+
+def downloadChunk(stub, CID):
+    package = DataForClient_pb2.downloadRequest(
+        ChunkId=CID
+    )
+    chunkData = stub.downloadChunk(package)
+    return chunkData
+
+
+def downloadFile(stub):
+    path = input('the file to download: ').strip('/ ')
+    chunksList = requestDownloadFromMaster(stub, path)
+    dataList = []
+    for chk in chunksList:
+        if chk.status == 0:
+            print('Houston We Have a Problem --\nSomething Goes Wrong!')
+            return 0
+        ip = chk.ip
+        port = chk.port
+        cid = chk.ChunkId
+        mystub = ConnectDataServer(ip + ':' + str(port))
+        chunkData = downloadChunk(mystub, cid)
+        dataList.append(chunkData)
+    name = path.split('/')[-1]
+    chunk.merge(dataList, name)
+    print('%s Download Successful!!'% name)
+    return 1
+    
 if __name__ == '__main__':
     user_interface()
 
