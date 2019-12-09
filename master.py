@@ -8,6 +8,7 @@ from protocol import MasterForData_pb2_grpc
 from protocol import DataForMaster_pb2
 from protocol import DataForMaster_pb2_grpc
 from utility import filetree
+from utility import chunk
 from masterlib import FileManager
 from masterlib import Backup
 
@@ -22,11 +23,11 @@ class MFD(MasterForData_pb2_grpc.MFDServicer):
 
     def Recommit(self, request, context):
         iscommit = FileManager.sys.vote(request.FID, request.CID)
+        # backup
+        Backup.BackupManager.insertCreateTask(request.FID, request.CID)
         if iscommit:
             # update filetree
             filetree.FileTree.insertNode(FileManager.sys.FindByFID(request.FID).path, False)
-            # backup
-            Backup.BackupManager.insertCreateTask(request.FID, request.CID)
         return MasterForData_pb2.recommitResponse(isCommit=iscommit)
 
 class MFC(MasterForClient_pb2_grpc.MFCServicer):
@@ -142,8 +143,8 @@ def serve():
     try:
         while True:
             time.sleep(10)  # one day in seconds 60*60*24
-         #   heartbeat() # 心跳检测
-         #   startbackup() # 备份更新
+         #   heartbeat()  # 心跳检测
+            startbackup() # 备份更新
     except KeyboardInterrupt:
         server.stop(0)
 
@@ -177,11 +178,12 @@ def startbackup():
                 continue
             did = achunk.getDataserverID()
 
-            newchunk = achunk
+            newchunk = chunk.chunk()
             newcid = FileManager.sys.getNewCID()
             newdid = FileManager.sys.FindDataServer()
             newchunk.setCID(newcid)
             newchunk.setDID(newdid)
+            newchunk.setFileInfo(achunk.getFileID(),achunk.getOffset())
             newip, newport = FileManager.sys.SeekSocket(newdid)
             try:
                 stub = ConnectDataServer(did)
@@ -190,15 +192,18 @@ def startbackup():
                 FileManager.sys.upchunkonRegister(newdid,1,newchunk)
                 Backup.BackupManager.end(cid,newchunk)
             except:
-                print(str(cid)+' backup failed!')
+                print(str(cid)+'create backup failed!')
         else:
             bq = Backup.BackupManager.getAbackupQue(cid)
             if not bq is None:
-                for achunk in bq:
+                for achunk in bq.getall():
                     adid = achunk.getDataserverID()
-                    stub = ConnectDataServer(adid)
-                    deleteChunkOnDataServer(stub,achunk.getChunkID)
-                    FileManager.sys.upchunkonRegister(adid,-1,achunk)
+                    try:
+                        stub = ConnectDataServer(adid)
+                        deleteChunkOnDataServer(stub,achunk.getChunkID)
+                        FileManager.sys.upchunkonRegister(adid,-1,achunk)
+                    except:
+                        print(str(cid) + 'delete backup failed!')
             Backup.BackupManager.end(cid)
 
 def ConnectDataServer(DID):
@@ -217,7 +222,7 @@ def deleteChunkOnDataServer(stub, CID):
 
 def copyChunkBetweenDataServer(stub,CID,copyip,copyport,copycid):
     package = DataForMaster_pb2.copyChunk(
-        mycid = CID,
+        CID = CID,
         copyip= copyip,
         copyport=copyport,
         copycid= copycid

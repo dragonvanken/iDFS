@@ -88,7 +88,7 @@ class FileManager:
         print('********************************************************************************************************')
         self.Register.show()
         print('-------------------------FileLogicManager Table-------------------------------------')
-        print('   FileID  |             LogicPath        |        FileSize        |     ChunkList')
+        print('   FileID  |         LogicPath        |    FileSize      |     ChunkList')
      #   print('------------------------------------------------------------------------------------')
         allchunk = []
         for key,item in self.FileSystem.items():
@@ -96,7 +96,7 @@ class FileManager:
             for achunk in item.getChunkList():
                 listname += str(achunk.getChunkId()) + ','
                 allchunk.append((achunk.getChunkId(),achunk.getFileID(),achunk.getOffset(),achunk.getDataserverID(),achunk.ChunkSize))
-            print('No.%-10d %-30s %12d %15s'%(key,item.getpath(),item.getFsize(),listname))
+            print('No.%-10d %-30s %-12d %-s'%(key,item.getpath(),item.getFsize(),listname))
         print('------------------------ChunkManager Table----------------------------------------')
         print('   ChunkID  | from(FileID,offset)  |store(DataServerID)|    ChunkSize')
     #    print('---------------------------------------------------------------------------------')

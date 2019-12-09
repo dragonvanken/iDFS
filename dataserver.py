@@ -40,9 +40,9 @@ class DFM(DataForMaster_pb2_grpc.DFMServicer):
 
     def copyChunkBetweenDataServer(self, request, context):
         cid = request.CID
-        address = request.newip + ':' + str(request.newport)
+        address = request.copyip + ':' + str(request.copyport)
         cchunk = StoreManager.StoreManager.get(cid)
-        cchunk.setCID(request.newcid)
+        cchunk.setCID(request.copycid)
         channel = grpc.insecure_channel(address)
         stub = DataForClient_pb2_grpc.DFCStub(channel)
         metadata = DataForClient_pb2.MetaData(
