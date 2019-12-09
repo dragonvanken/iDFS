@@ -96,9 +96,9 @@ def user_interface():
         cmd = input().lower().strip()
         if cmd == 'fetch':
             fetch(stub)
-        if cmd == 'update':
+        elif cmd == 'update':
             update(stub)
-        if cmd == 'delete':
+        elif cmd == 'delete':
             deleteFile(stub)
         elif cmd == 'quit' or cmd == 'exit':
             exit(0)
