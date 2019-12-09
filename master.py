@@ -106,8 +106,8 @@ def serve():
     try:
         while True:
             time.sleep(10)  # one day in seconds 60*60*24
-            heartbeat() # 心跳检测
-            startbackup() # 备份更新
+         #   heartbeat() # 心跳检测
+         #   startbackup() # 备份更新
     except KeyboardInterrupt:
         server.stop(0)
 
@@ -151,7 +151,7 @@ def startbackup():
                 stub = ConnectDataServer(did)
                 # send infomation to dataserver(ip,port) copy cid-chunk to newdataserver(newip,newport) as newcid-chunk
                 copyChunkBetweenDataServer(stub,cid,newip,newport,newcid)
-                FileManager.sys.Register.upchunknum(newdid,1)
+                FileManager.sys.upchunkonRegister(newdid,1,newchunk)
                 Backup.BackupManager.end(cid,newchunk)
             except:
                 print(str(cid)+' backup failed!')
@@ -162,6 +162,7 @@ def startbackup():
                     adid = achunk.getDataserverID()
                     stub = ConnectDataServer(adid)
                     deleteChunkOnDataServer(stub,achunk.getChunkID)
+                    FileManager.sys.upchunkonRegister(adid,-1,achunk)
             Backup.BackupManager.end(cid)
 
 def ConnectDataServer(DID):
@@ -197,4 +198,5 @@ if __name__ == '__main__':
     newFile = FileManager.sys.CreateFile('root/p/qwe',1024 * 1000)
     FileManager.sys.FileSystem[newFile.getFID()].ChunkList[0].setCID(777)
     FileManager.sys.FileSystem[newFile.getFID()].ChunkList[0].setDID(1)
+    FileManager.sys.show()
     serve()

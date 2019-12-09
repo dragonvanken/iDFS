@@ -65,7 +65,7 @@ class StoreManage:
         return  self.DID
 
     def show(self):
-        os.system('cls')
+        print('***************************************************************************************************')
         print('The ServerID:',self.getDID())
         print('------------------------ChunkManager Table----------------------------------------')
         print('   ChunkID  | from(FileID,offset)  |store(Address)|   ChunkSize | status')

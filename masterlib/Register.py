@@ -7,13 +7,12 @@ class HeadRegister:
         self.chunknumber = 0
         self.chunklist = []
 
-    def set(self,IP,Port,DID = 0,num =0, list = list,alive = 1):
+    def set(self,IP,Port,DID = 0,num =0,alive = 1):
         self.DID = DID
         self.IP = IP
         self.Port = Port
         self.alive = alive
         self.chunknumber = num
-        self.chunklist = list
         return self
 
     def getDID(self):
