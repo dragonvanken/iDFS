@@ -81,7 +81,6 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
                     if response.feedback:
                         msg2 += 1
                     Backup.BackupManager.insertDeleteTask(chunk.getFileID(),cid)
-                    FileManager.sys.Register.upchunknum(did,-1)
                 if msg2 == len(chunkList):
                     msg1 += 1
                 else: break
@@ -163,7 +162,6 @@ def startbackup():
                     adid = achunk.getDataserverID()
                     stub = ConnectDataServer(adid)
                     deleteChunkOnDataServer(stub,achunk.getChunkID)
-                    FileManager.sys.Register.upchunknum(adid,-1)
             Backup.BackupManager.end(cid)
 
 def ConnectDataServer(DID):
