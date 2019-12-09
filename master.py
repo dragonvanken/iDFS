@@ -107,7 +107,7 @@ def serve():
         while True:
             time.sleep(10)  # one day in seconds 60*60*24
          #   heartbeat() # 心跳检测
-            startbackup() # 备份更新
+         #   startbackup() # 备份更新
     except KeyboardInterrupt:
         server.stop(0)
 
@@ -198,4 +198,5 @@ if __name__ == '__main__':
     newFile = FileManager.sys.CreateFile('root/p/qwe',1024 * 1000)
     FileManager.sys.FileSystem[newFile.getFID()].ChunkList[0].setCID(777)
     FileManager.sys.FileSystem[newFile.getFID()].ChunkList[0].setDID(1)
+    FileManager.sys.show()
     serve()
