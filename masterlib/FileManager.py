@@ -1,6 +1,7 @@
 from utility import chunk
 from masterlib import Register
 import math
+import os
 
 class AFile:
     def __init__(self):
@@ -76,6 +77,25 @@ class FileManager:
         self.FileSystem.setdefault(newFile.getFID(),newFile)
         return newFile
 
+    def show(self):
+        os.system('cls')
+        self.Register.show()
+        print('-------------------------FileLogicManager Table-------------------------------------')
+        print('   FileID  |             LogicPath        |        FileSize        |     ChunkList')
+     #   print('------------------------------------------------------------------------------------')
+        allchunk = []
+        for key,item in self.FileSystem.items():
+            listname = ''
+            for achunk in item.getChunkList():
+                listname += str(achunk.getChunkId()) + ','
+                allchunk.append((achunk.getChunkId(),achunk.getFileID(),achunk.getOffset(),achunk.getDataserverID(),achunk.ChunkSize))
+            print('No.%-10d %-30s %12d %15s'%(key,item.getpath(),item.getFsize(),listname))
+        print('------------------------ChunkManager Table----------------------------------------')
+        print('   ChunkID  | from(FileID,offset)  |store(Address)| ChunkSize | status')
+    #    print('---------------------------------------------------------------------------------')
+        for record in allchunk:
+            print('No.%-10d %5d %5d %20d %20d' % (record[0], record[1], record[2], record[3],record[4]))
+
     def getNewCID(self):
         self.CIDcout += 1
         return self.CIDcout
@@ -115,6 +135,7 @@ class FileManager:
     def LogOut(self,did):
         return sys.Register.deleterow(did)
 
+
 sys = FileManager()
 
 if __name__ == '__main__':
@@ -124,8 +145,8 @@ if __name__ == '__main__':
     row1.set("6.7.8.9", 3000)
     t0 = sys.Register.setrow(row0)
     t1 = sys.Register.setrow(row1)
-    myfile = sys.CreateFile('c:/ss/l.dat',1024)
-    t= sys.FindByFilenama('c:/ss/0l.dat')
+    myfile = sys.CreateFile('c:/ss/l.dat',3674*1000)
+    sys.show()
 
    # print(myfile.getFID())
     # print(myfile.getpath())

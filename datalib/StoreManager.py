@@ -1,5 +1,5 @@
 from utility import chunk
-
+import  os
 class StoreManage:
     def __init__(self):
         self.TmpChunk = {} #  临时存储表
@@ -55,6 +55,14 @@ class StoreManage:
 
     def getDID(self):
         return  self.DID
+
+    def show(self):
+        os.system('cls')
+        print('------------------------ChunkManager Table----------------------------------------')
+        print('   ChunkID  | from(FileID,offset)  |store(DataServerID)|    ChunkSize')
+        #    print('---------------------------------------------------------------------------------')
+        for record in allchunk:
+            print('No.%-10d %5d %5d %20d %20d' % (record[0], record[1], record[2], record[3], record[4]))
 
 StoreManager = StoreManage()
 
