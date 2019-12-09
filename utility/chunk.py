@@ -1,6 +1,18 @@
 import pickle
 import os
 CHUNK_SIZE = 1000 * 1024 # 1MB
+def merge(chunklist,address):
+    sortsresult = {}
+    bytesceam = bytes()
+    for achunk in chunklist:
+        sortsresult.setdefault(achunk.getOffset(),achunk.getContent())
+
+    for i in range(0,len(sortsresult)):
+            bytesceam += sortsresult.get(i)
+    outputfile = open(address,'wb')
+    outputfile.write(bytesceam)
+    return True
+
 def split(address):
     partnum = 0
     chunkarray = []
@@ -39,6 +51,9 @@ class chunk:
         self.StoreAdress = None # 物理地址 only in DataServer
         self.Content = None # 存储内容
 
+    def appendContent(self,content):
+        self.Content += content
+
     def setCID(self,CID):
         self.ChunkId = CID
 
@@ -73,8 +88,5 @@ class chunk:
     def getContent(self):
         return self.Content
 
-if __name__ == '__main__':
-    c,s=split('ppp')
-    print(s/1024/1000)
 
 
