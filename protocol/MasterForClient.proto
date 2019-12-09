@@ -73,4 +73,5 @@ message targetInfo{
     int32 port = 2;     //dataServer的端口
     int32 ChunkSize = 3;
     int32 ChunkId = 4;
+    bool status = 5;
 }

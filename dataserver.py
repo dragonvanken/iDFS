@@ -110,6 +110,19 @@ class DFC(DataForClient_pb2_grpc.DFCServicer):
             Msg='ok'
         )
 
+    def downloadChunk(self, request, context):
+        cid = request.ChunkId
+        theChunk = StoreManager.StoreManager.get(cid)
+        metadata = DataForClient_pb2.MetaData(
+            ChunkSize=theChunk.ChunkSize,
+            ChunkId=theChunk.getChunkId(),
+            inFID=theChunk.getFileID(),
+            offset=theChunk.getOffset(),
+            StoreDID=theChunk.getDataserverID()
+        )
+        package = DataForClient_pb2.dataOfChunk(metadata=metadata, chunk=theChunk.getContent())
+        return package
+
 def register():
     channel = grpc.insecure_channel(MASTER_ADDRESS)
     stub = MasterForData_pb2_grpc.MFDStub(channel)

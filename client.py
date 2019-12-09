@@ -119,6 +119,47 @@ def deleteFile(stub):
     print(ack.msg)
 
 
+def requestDownloadFromMaster(stub):
+    toDownload = input('the file to download: ')
+    package = MasterForClient_pb2.downloadRequestInfo(
+        path=toDownload
+    )
+    targetInfo = stub.requestDownloadFromMaster(package)
+    chunknum = 0
+    chunksList = []
+    for chk in targetInfo:
+        if chk.status == -1:
+            print('Houston We Have a Problem --\nNo Such File!')
+            return []
+        # mychunk = chunk.chunk()
+        # mychunk.ChunkSize = chk.ChunkSize
+        # mychunk.setCID(chk.ChunkId)
+        # mychunk.ip = chk.ip
+        # mychunk.port = chk.port
+        # chunknum += 1
+        chunksList.append(chk)
+        # 没有做master发过来chunks的完整性校验
+    return chunksList
+
+
+
+
+def ConnectDataServer(socket):
+    channel = grpc.insecure_channel(socket)
+    stub = DataForClient_pb2_grpc.DFCStub(channel)
+    return stub
+
+def downloadChunk(stub, CID):
+    package = DataForClient_pb2.downloadRequest(
+        ChunkId=CID
+    )
+    chunkData = stub.downloadChunk(package)
+    return chunkData
+
+
+    
+
+
 if __name__ == '__main__':
     user_interface()
 

@@ -95,6 +95,34 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
                 msg='Failed!',
                 feedBack=False
             )
+            
+    def requestDownloadFromMaster(self, request, context):
+        requestFile = request.path
+        temp = FileManager.sys.FindByFilenama(requestFile)
+        chunkList = []
+        if not temp:
+            return MasterForClient_pb2.targetInfo(
+                status=-1
+            )
+        else:
+            chunkList = temp.getChunkList()
+
+        responseList = []
+        for chk in chunkList:
+            rsps = MasterForClient_pb2.targetInfo(
+                ip = chk.ip,   
+                port = chk.port,
+                ChunkSize = chk.ChunkSize,
+                ChunkId = chk.ChunkId,
+                status = 1
+            )
+            responseList.append(rsps)
+        for response in responseList:
+            yield response
+
+
+
+    
 
 
 def serve():
