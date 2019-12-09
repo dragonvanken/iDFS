@@ -112,6 +112,9 @@ class FileManager:
 
     # 删除文件记录
     def DeleteFile(self,fid):
+        aFile = self.FileSystem.get(fid)
+        for item in aFile.getChunkList():
+            self.upchunkonRegister(item.getDataserverID(),-1,item)
         deleteRecord = self.FileSystem.pop(fid)
         self.show()
         return deleteRecord

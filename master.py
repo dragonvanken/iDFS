@@ -81,7 +81,6 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
                     if response.feedback:
                         msg2 += 1
                     Backup.BackupManager.insertDeleteTask(chunk.getFileID(),cid)
-                    FileManager.sys.Register.upchunknum(did,-1)
                 if msg2 == len(chunkList):
                     msg1 += 1
                 else: break
@@ -107,7 +106,7 @@ def serve():
     try:
         while True:
             time.sleep(10)  # one day in seconds 60*60*24
-            heartbeat() # 心跳检测
+         #   heartbeat() # 心跳检测
             startbackup() # 备份更新
     except KeyboardInterrupt:
         server.stop(0)
@@ -152,7 +151,7 @@ def startbackup():
                 stub = ConnectDataServer(did)
                 # send infomation to dataserver(ip,port) copy cid-chunk to newdataserver(newip,newport) as newcid-chunk
                 copyChunkBetweenDataServer(stub,cid,newip,newport,newcid)
-                FileManager.sys.Register.upchunknum(newdid,1)
+                FileManager.sys.upchunkonRegister(newdid,1,newchunk)
                 Backup.BackupManager.end(cid,newchunk)
             except:
                 print(str(cid)+' backup failed!')
@@ -163,7 +162,7 @@ def startbackup():
                     adid = achunk.getDataserverID()
                     stub = ConnectDataServer(adid)
                     deleteChunkOnDataServer(stub,achunk.getChunkID)
-                    FileManager.sys.Register.upchunknum(adid,-1)
+                    FileManager.sys.upchunkonRegister(adid,-1,achunk)
             Backup.BackupManager.end(cid)
 
 def ConnectDataServer(DID):
