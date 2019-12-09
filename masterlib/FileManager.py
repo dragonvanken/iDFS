@@ -1,7 +1,6 @@
 from utility import chunk
 from masterlib import Register
 import math
-import os
 
 class AFile:
     def __init__(self):
@@ -51,6 +50,13 @@ class AFile:
     def getChunkList(self):
         return self.ChunkList
 
+    def vote(self,cid):
+        self.voter.append(cid)
+        if len(self.voter) == len(self.ChunkList):
+            return True
+        else:
+            return False
+
 class FileManager:
     def __init__(self):
             self.FileSystem = {}
@@ -96,6 +102,9 @@ class FileManager:
     #    print('---------------------------------------------------------------------------------')
         for record in allchunk:
             print('No.%-10d %5d %5d %20d %20d' % (record[0], record[1], record[2], record[3],record[4]))
+
+    def vote(self,fid,cid):
+        return self.FileSystem[fid].vote(cid)
 
     def readfile(self,path):
         Afile = self.FindByFilenama(path)
