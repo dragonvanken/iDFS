@@ -1,6 +1,7 @@
 import grpc
 import socket
 import multiprocessing
+from termcolor import colored
 from concurrent import futures
 from protocol import MasterForData_pb2
 from protocol import MasterForData_pb2_grpc
@@ -69,6 +70,7 @@ def vote(FID, CID, status):
         CID=CID,
         status=status)
     )
+    channel.close()
     if response.isCommit:
         StoreManager.StoreManager.commit(CID)
         print('Commit!')
@@ -88,7 +90,7 @@ class DFC(DataForClient_pb2_grpc.DFCServicer):
         StoreManager.StoreManager.store(cchunk)
 
         # 投票
-        p = multiprocessing.Process(target=vote, args=(cchunk.getFileID(), cchunk.getChunkId(), 1))
+        vote(cchunk.getFileID(),cchunk.getChunkId(),1)
 
         return DataForClient_pb2.uploadChunkResponse(
             Msg='Saved!'
@@ -122,7 +124,7 @@ def register():
 
 def serve():
     ip, port = register()
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=30))
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=200))
     DataForClient_pb2_grpc.add_DFCServicer_to_server(DFC(), server)
     DataForMaster_pb2_grpc.add_DFMServicer_to_server(DFM(),server)
     server.add_insecure_port('[::]:' + str(port))
@@ -131,9 +133,4 @@ def serve():
 
 
 if __name__ == '__main__':
-    achunk = chunk.chunk()
-    achunk.setCID(777)
-    achunk.setContent('are you ok?')
-    StoreManager.StoreManager.store(achunk,True)
     serve()
-    print(StoreManager.StoreManager.getDID())
