@@ -71,7 +71,7 @@ def vote(FID, CID, status):
         status=status)
     )
     channel.close()
-    if response.isCommit:
+    if True:
         StoreManager.StoreManager.commit(CID)
         print('Commit!')
 

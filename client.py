@@ -30,10 +30,8 @@ def SendChunkToDataserver(args):
     channel.close()
     return response.Msg
 
-def upfile(stub):
-    sourcepath = 'ppp'
+def upfile(stub, sourcepath, destination):
     contentarray ,sizes= chunk.split(sourcepath)
-    destination = 'root'
     response = stub.getChunkInfoAndAllocatedDataServer(MasterForClient_pb2.getChunkInfoAndAllocatedDataServerRequest(
     size = sizes,
     path = destination
@@ -68,14 +66,16 @@ def getTree(stub):
 
     filetree.FileTree.deseriesFromPath(newtree)
 
-def update(stub):
-    print('update')
+def upload(stub):
+    print('uploading')
     """ try:
         upfile(stub)
     except:
         print(colored('Bad connection.', 'red'))
         print(colored('Please retry.', 'red')) """
-    upfile(stub)
+    upfile(stub, 'ppp', 'root/ppp')
+    print('Successfully upload file', 'ppp')
+    fetch(stub)
 
 def fetch(stub):
     print('Fetching remote information.')
@@ -96,8 +96,8 @@ def user_interface():
         cmd = input().lower().strip()
         if cmd == 'fetch':
             fetch(stub)
-        elif cmd == 'update':
-            update(stub)
+        elif cmd == 'upload':
+            upload(stub)
         elif cmd == 'delete':
             deleteFile(stub)
         elif cmd == 'quit' or cmd == 'exit':

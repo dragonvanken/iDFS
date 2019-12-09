@@ -21,8 +21,13 @@ class MFD(MasterForData_pb2_grpc.MFDServicer):
             id=FileManager.sys.RegistUp(ip, port))
 
     def Recommit(self, request, context):
-        # TODO
-        return MasterForData_pb2.recommitResponse(isCommit=True)
+        iscommit = FileManager.sys.vote(request.FID, request.CID)
+        if iscommit:
+            # update filetree
+            filetree.FileTree.insertNode(FileManager.sys.FindByFID(request.FID).path, False)
+            # backup
+            Backup.BackupManager.insertCreateTask(request.FID, request.CID)
+        return MasterForData_pb2.recommitResponse(isCommit=iscommit)
 
 class MFC(MasterForClient_pb2_grpc.MFCServicer):
     def getFiletree(self, request, context):
