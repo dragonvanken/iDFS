@@ -97,6 +97,11 @@ class FileManager:
         for record in allchunk:
             print('No.%-10d %5d %5d %20d %20d' % (record[0], record[1], record[2], record[3],record[4]))
 
+    def readfile(self,path):
+        Afile = self.FindByFilenama(path)
+        chunklist = Afile.getChunkList()
+        return chunklist
+
     def getNewCID(self):
         self.CIDcout += 1
         return self.CIDcout
