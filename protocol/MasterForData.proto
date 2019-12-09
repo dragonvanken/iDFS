@@ -9,6 +9,10 @@ service MFD{
     //返回：注册码
     rpc RegisteServer(socket) returns (Num) {}
 
+    //服务：二次提交
+    //请求：FID、CID、状态🏇
+    //返回：是否提交
+    rpc Recommit(recommitRequest) returns (recommitResponse) {}
 }
 
 message Num{
@@ -18,4 +22,14 @@ message Num{
 message socket{
     string ip = 1;
     int32 port = 2;
+}
+
+message recommitRequest{
+    int32 FID = 1;
+    int32 CID = 2;
+    int32 status = 3;
+}
+
+message recommitResponse{
+    bool isCommit = 1;
 }

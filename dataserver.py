@@ -1,5 +1,6 @@
 import grpc
 import socket
+import multiprocessing
 from concurrent import futures
 from protocol import MasterForData_pb2
 from protocol import MasterForData_pb2_grpc
@@ -10,6 +11,25 @@ from protocol import DataForClient_pb2_grpc
 from utility import chunk
 from datalib import StoreManager
 
+
+MASTER_ADDRESS = 'localhost:50051'
+
+
+def getEthIp():
+    """返回本机局域网IP地址(str)"""
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    return s.getsockname()[0]
+
+
+def getOpenPort():
+    """选取一个空闲的端口并返回端口号(int)"""
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.bind(("", 0))
+    s.listen(1)
+    port = s.getsockname()[1]
+    s.close()
+    return int(port)
 
 class DFM(DataForMaster_pb2_grpc.DFMServicer):
     def deleteChunkOnDataServer(self, request, context):
@@ -40,6 +60,19 @@ class DFM(DataForMaster_pb2_grpc.DFMServicer):
             response= DataForMaster_pb2.ACK1(feedback=False)
         return response
 
+
+def vote(FID, CID, status):
+    channel = grpc.insecure_channel(MASTER_ADDRESS)
+    stub = MasterForData_pb2_grpc.MFDStub(channel)
+    response = stub.Recommit(MasterForData_pb2.recommitRequest(
+        FID=FID,
+        CID=CID,
+        status=status)
+    )
+    if response.isCommit:
+        StoreManager.StoreManager.commit(CID)
+        print('Commit!')
+
 class DFC(DataForClient_pb2_grpc.DFCServicer):
     def uploadChunk(self, request, context):
         cchunk = chunk.chunk()
@@ -52,8 +85,13 @@ class DFC(DataForClient_pb2_grpc.DFCServicer):
         cchunk.StoreDID = metadata.StoreDID
         cchunk.Content = content
         print(cchunk.ChunkId, 'Done!')
+        StoreManager.StoreManager.store(cchunk)
+
+        # 投票
+        p = multiprocessing.Process(target=vote, args=(cchunk.getFileID(), cchunk.getChunkId(), 1))
+
         return DataForClient_pb2.uploadChunkResponse(
-            Msg = 'Good!'
+            Msg='Saved!'
         )
 
     def copyChunk(self, request, context):
@@ -72,29 +110,15 @@ class DFC(DataForClient_pb2_grpc.DFCServicer):
             Msg='ok'
         )
 
-def getEthIp():
-    """返回本机局域网IP地址(str)"""
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("8.8.8.8", 80))
-    return s.getsockname()[0]
-
-def getOpenPort():
-    """选取一个空闲的端口并返回端口号(int)"""
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.bind(("",0))
-    s.listen(1)
-    port = s.getsockname()[1]
-    s.close()
-    return int(port)
-
 def register():
-    channel = grpc.insecure_channel('localhost:50051')
+    channel = grpc.insecure_channel(MASTER_ADDRESS)
     stub = MasterForData_pb2_grpc.MFDStub(channel)
     ip = getEthIp()
     port = getOpenPort()
-    response = stub.RegisteServer(MasterForData_pb2.socket(ip = ip,port = port))
+    response = stub.RegisteServer(MasterForData_pb2.socket(ip=ip, port=port))
     StoreManager.StoreManager.setDID(response.id)
     return ip, port
+
 
 def serve():
     ip, port = register()
@@ -104,6 +128,7 @@ def serve():
     server.add_insecure_port('[::]:' + str(port))
     server.start()
     server.wait_for_termination()
+
 
 if __name__ == '__main__':
     achunk = chunk.chunk()
