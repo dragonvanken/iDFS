@@ -178,7 +178,13 @@ def downloadFile(stub):
         cid = chk.ChunkId
         mystub = ConnectDataServer(ip + ':' + str(port))
         chunkData = downloadChunk(mystub, cid)
-        dataList.append(chunkData)
+        theChunk = chunk.chunk()
+        theChunk.ChunkSize = chunkData.ChunkSize
+        theChunk.ChunkId = chunkData.ChunkId
+        theChunk.inFID = chunkData.inFID
+        theChunk.offset = chunkData.offset
+        theChunk.Content = chunkData.Content
+        dataList.append(theChunk)
     name = path.split('/')[-1]
     chunk.merge(dataList, name)
     print('%s Download Successful!!'% name)

@@ -43,8 +43,11 @@ message downloadRequest{
 }
 
 message dataOfChunk{
-    MetaData metadata = 1;
-    bytes chunk = 2;
+    int32 ChunkSize = 1; 
+    int32 ChunkId = 2;
+    int32 inFID = 3;    
+    int32 offset = 4 ;  
+    bytes Content = 6;
 }
 
 message copyChunkRequest{
