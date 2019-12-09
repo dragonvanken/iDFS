@@ -124,6 +124,8 @@ def user_interface():
             upload(stub)
         elif cmd == 'delete':
             deleteFile(stub)
+        elif cmd == 'download':
+            downloadFile(stub)
         elif cmd == 'quit' or cmd == 'exit':
             exit(0)
         else:
@@ -143,31 +145,12 @@ def deleteFile(stub):
     print(ack.msg)
 
 
-def requestDownloadFromMaster(stub):
-    toDownload = input('the file to download: ')
+def requestDownloadFromMaster(stub, toDownload):
     package = MasterForClient_pb2.downloadRequestInfo(
         path=toDownload
     )
     targetInfo = stub.requestDownloadFromMaster(package)
     return targetInfo
-
-def downloadFile(stub):
-    chunksList = requestDownloadFromMaster(stub)
-    dataList = []
-    for chk in chunksList:
-        if chk.status == 0:
-            print('Houston We Have a Problem --\nSomething Goes Wrong!')
-            return 0
-        ip = chk.ip
-        port = chk.port
-        cid = chk.ChunkId
-        mystub = ConnectDataServer(ip + ':' + str(port))
-        chunkData = downloadChunk(mystub, cid)
-        dataList.append(chunkData)
-    
-
-
-
 
 def ConnectDataServer(socket):
     channel = grpc.insecure_channel(socket)
@@ -182,9 +165,25 @@ def downloadChunk(stub, CID):
     return chunkData
 
 
+def downloadFile(stub):
+    path = input('the file to download: ').strip('/ ')
+    chunksList = requestDownloadFromMaster(stub, path)
+    dataList = []
+    for chk in chunksList:
+        if chk.status == 0:
+            print('Houston We Have a Problem --\nSomething Goes Wrong!')
+            return 0
+        ip = chk.ip
+        port = chk.port
+        cid = chk.ChunkId
+        mystub = ConnectDataServer(ip + ':' + str(port))
+        chunkData = downloadChunk(mystub, cid)
+        dataList.append(chunkData)
+    name = path.split('/')[-1]
+    chunk.merge(dataList, name)
+    print('%s Download Successful!!'% name)
+    return 1
     
-
-
 if __name__ == '__main__':
     user_interface()
 
