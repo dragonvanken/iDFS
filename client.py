@@ -149,21 +149,22 @@ def requestDownloadFromMaster(stub):
         path=toDownload
     )
     targetInfo = stub.requestDownloadFromMaster(package)
-    chunknum = 0
-    chunksList = []
-    for chk in targetInfo:
-        if chk.status == -1:
-            print('Houston We Have a Problem --\nNo Such File!')
-            return []
-        # mychunk = chunk.chunk()
-        # mychunk.ChunkSize = chk.ChunkSize
-        # mychunk.setCID(chk.ChunkId)
-        # mychunk.ip = chk.ip
-        # mychunk.port = chk.port
-        # chunknum += 1
-        chunksList.append(chk)
-        # 没有做master发过来chunks的完整性校验
-    return chunksList
+    return targetInfo
+
+def downloadFile(stub):
+    chunksList = requestDownloadFromMaster(stub)
+    dataList = []
+    for chk in chunksList:
+        if chk.status == 0:
+            print('Houston We Have a Problem --\nSomething Goes Wrong!')
+            return 0
+        ip = chk.ip
+        port = chk.port
+        cid = chk.ChunkId
+        mystub = ConnectDataServer(ip + ':' + str(port))
+        chunkData = downloadChunk(mystub, cid)
+        dataList.append(chunkData)
+    
 
 
 

@@ -110,7 +110,7 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
         chunkList = []
         if not temp:
             return MasterForClient_pb2.targetInfo(
-                status=-1
+                status=0
             )
         else:
             chunkList = temp.getChunkList()
