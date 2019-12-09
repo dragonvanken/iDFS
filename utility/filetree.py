@@ -90,15 +90,21 @@ class Tree:
             path_list.append((node.path, node.isFolder))
         return str(path_list)
 
+    def isUniquePath(self, path):
+        return self.seek(path) is None
+
     def insertNode(self, path, isFolder):
         """当插入成功时返回True"""
         self.changed = True
+        uniquePath = self.isUniquePath(path)
+
         dir_path, name = self.__process_path(path)
         parent_node = self.seek(dir_path)
-        if parent_node and parent_node.isFolder:
+        if parent_node and parent_node.isFolder and uniquePath:
             node = AbstractNode(name, isFolder)
             return parent_node.addchild(node)
-        elif dir_path == "":
+        # dir_path is empty, insert to root's brother
+        elif dir_path == "" and uniquePath:
             node = AbstractNode(name, isFolder)
             self.root.addbrother(node)
         else:

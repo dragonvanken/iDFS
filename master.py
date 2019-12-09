@@ -20,6 +20,14 @@ class MFD(MasterForData_pb2_grpc.MFDServicer):
         return MasterForData_pb2.Num(
             id=FileManager.sys.RegistUp(ip, port))
 
+    def Recommit(self, request, context):
+        iscommit = FileManager.sys.vote(request.FID, request.CID)
+        if iscommit:
+            # update filetree
+            filetree.FileTree.insertNode(FileManager.sys.FindByFID(request.FID).path, False)
+            # backup
+            Backup.BackupManager.insertCreateTask(request.FID, request.CID)
+        return MasterForData_pb2.recommitResponse(isCommit=iscommit)
 
 class MFC(MasterForClient_pb2_grpc.MFCServicer):
     def getFiletree(self, request, context):
@@ -126,7 +134,7 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
 
 
 def serve():
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=200))
     MasterForClient_pb2_grpc.add_MFCServicer_to_server(MFC(), server)
     MasterForData_pb2_grpc.add_MFDServicer_to_server(MFD(), server)
     server.add_insecure_port('[::]:50051')
@@ -218,13 +226,5 @@ def copyChunkBetweenDataServer(stub,CID,copyip,copyport,copycid):
 
 if __name__ == '__main__':
     filetree.FileTree.setroot(filetree.AbstractNode('root', True))
-    filetree.FileTree.insertNode('root/p', 1)
-    filetree.FileTree.insertNode('root/qqq', 1)
-    filetree.FileTree.insertNode('root/qqq/wanPijia1', 0)
-    filetree.FileTree.insertNode('root/qqq/wanPijia2', 0)
-    filetree.FileTree.insertNode('root/p/qwe', 0)
-    newFile = FileManager.sys.CreateFile('root/p/qwe',1024 * 1000)
-    FileManager.sys.FileSystem[newFile.getFID()].ChunkList[0].setCID(777)
-    FileManager.sys.FileSystem[newFile.getFID()].ChunkList[0].setDID(1)
     FileManager.sys.show()
     serve()
