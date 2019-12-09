@@ -76,18 +76,20 @@ def isUniquePath(destination):
 def upload(stub, cur_node, user_input):
     path, destination = user_input.split()[1], user_input.split()[2]
     print('uploading')
-    """ try:
-        upfile(stub)
+    try:
+        destination = cur_node.path + '/' + destination
+
+        if not isUniquePath(destination):
+            print(colored('Unavailable path, please retry.', 'red'))
+        else:
+            upfile(stub, path, destination)
+            print(colored('Successfully upload file '+path+' to '+destination,'green'))
+            fetch(stub)
+            cur_node = filetree.FileTree.seek(cur_node.path)
     except:
         print(colored('Bad connection.', 'red'))
-        print(colored('Please retry.', 'red')) """
-    destination = cur_node.path + '/' + destination
-
-    if not isUniquePath(destination):
-        print(colored('Unavailable path, please retry.', 'red'))
-    else:
-        upfile(stub, path, destination)
-        print(colored('Successfully upload file '+path+' to '+destination,'green'))
+        print(colored('Please retry.', 'red'))
+    return cur_node
 
 def fetch(stub):
     print('Fetching remote information.')
@@ -112,16 +114,16 @@ def cd(cur_node, user_input):
     if destination == '..':
         if cur_node.parent:
             cur_node = cur_node.parent
-            showSubFiles(cur_node)
+            print(cur_node.path)
     elif destination == '.':
-        showSubFiles(cur_node)
+        print(cur_node.path)
     else:
         target_path = cur_node.path + '/' + destination
         target_node = filetree.FileTree.seek(target_path)
         if target_node:
             if target_node.isFolder:
                 cur_node = target_node
-                showSubFiles(cur_node)
+                print(cur_node.path)
             else:
                 print(colored(destination+' is not a folder.', 'red'))
         else:
@@ -142,17 +144,24 @@ def mkdir(stub, cur_node, user_input):
 def showAllCommands():
     print('iDFS is a Distribution File System written by WanKeJia group for NUDT distribution system cource.\n')
     print('All commands:')
-    print(colored('\tfetch','green'))
-    print('\t\t更新并显示文件目录结构')
 
-    print(colored('\tupload', 'green'))
-    print('\t\t上传文件')
+    print(colored('\tcd [folder]', 'green'))
+    print('\t\t进入当前路径下的某个目录\n')
+
+    print(colored('\tmkdir [folder]', 'green'))
+    print('\t\t在当前路径下新建一个目录\n')
+
+    print(colored('\tfetch','green'))
+    print('\t\t更新并显示文件目录结构\n')
+
+    print(colored('\tupload [file_path] [destination_path]', 'green'))
+    print('\t\t上传本地文件到指定目录\n')
 
     print(colored('\tdelete', 'green'))
-    print('\t\t删除文件')
+    print('\t\t删除文件\n')
 
-    print(colored('\tquit or exit', 'green'))
-    print('\t\t退出系统')
+    print(colored('\tquit/exit', 'green'))
+    print('\t\t退出系统\n')
 
 # 用户端命令行界面
 def user_interface():
@@ -177,7 +186,7 @@ def user_interface():
         elif cmd == 'fetch':
             fetch(stub)
         elif cmd == 'upload':
-            upload(stub, cur_node, user_input)
+            cur_node = upload(stub, cur_node, user_input)
         elif cmd == 'delete':
             deleteFile(stub)
         elif cmd == 'download':
