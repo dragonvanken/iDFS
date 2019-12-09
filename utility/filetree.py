@@ -1,4 +1,5 @@
 from termcolor import colored
+import  os
 
 class AbstractNode:
     def __init__(self, name, isFolder):
@@ -193,6 +194,7 @@ class Tree:
                 cur_note = stack.pop(0)
                 
     def print_tree(self):
+        os.system('cls')
         tmp = AbstractNode('tmp', True)
         tmp.child = self.root
         self.__pprint_tree(tmp, True)

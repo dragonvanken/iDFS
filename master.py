@@ -68,6 +68,7 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
             )
 
         msg0 = filetree.FileTree.removeNode(FilePath)
+        filetree.FileTree.print_tree()
         if listToDelete:
             for fileName in listToDelete:
                 msg2 = 0
@@ -106,11 +107,26 @@ def serve():
     try:
         while True:
             time.sleep(10)  # one day in seconds 60*60*24
-            startbackup()
-            filetree.FileTree.print_tree()
-            FileManager.sys.show()
+            heartbeat() # 心跳检测
+            startbackup() # 备份更新
     except KeyboardInterrupt:
         server.stop(0)
+
+def heartbeat():
+    examdid = FileManager.sys.getalldataserver()
+    for did in examdid:
+        ip,port = FileManager.sys.SeekSocket(did)
+        try:
+            # send heartpackage to DS
+            s=1
+        except:
+            if FileManager.sys.Register.getrow(did).getstatus() == 1:
+                FileManager.sys.uplive(did,0)
+                chunkondid = FileManager.sys.SeekChunkOnDid(did)
+                for mainchunk in chunkondid:
+                    newmainchunk = Backup.BackupManager.updateMainchunk(mainchunk.getChunkId())
+                    if newmainchunk is not None:
+                        FileManager.sys.upMainChunk(newmainchunk)
 
 def startbackup():
     while True:
