@@ -9,6 +9,7 @@ from utility import chunk
 import atexit
 import multiprocessing
 import threading
+import time
 
 
 def SendChunkToDataserver(args):
@@ -52,9 +53,12 @@ def upfile(stub, sourcepath, destination):
         address.append(str(ip)+':'+str(port))
         allchunk.append(chunks)
 
-    with multiprocessing.Pool(4) as p:
-        results = p.map(SendChunkToDataserver, zip(address,allchunk))
-    print('update ok')
+    """ with multiprocessing.Pool(4) as p:
+        results = p.map(SendChunkToDataserver, zip(address,allchunk)) """
+    results = []
+    for i in range(len(allchunk)):
+        results.append(SendChunkToDataserver((address[i],allchunk[i])))
+    print('upload ok')
     print(results)
 
 def getTree(stub):
@@ -83,7 +87,6 @@ def upload(stub):
     else:
         upfile(stub, path, destination)
         print(colored('Successfully upload file '+path+' to '+destination,'green'))
-    fetch(stub)
 
 def fetch(stub):
     print('Fetching remote information.')
