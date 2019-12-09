@@ -1,6 +1,7 @@
 from utility import chunk
 from masterlib import Register
 import math
+import os
 
 class AFile:
     def __init__(self):
@@ -41,6 +42,15 @@ class AFile:
     def getpath(self):
         return self.path
 
+    def getChunk(self, cid):
+        for item in self.ChunkList:
+            if item.getChunkId() == cid:
+                return item
+        return None
+
+    def getChunkList(self):
+        return self.ChunkList
+
 class FileManager:
     def __init__(self):
             self.FileSystem = {}
@@ -65,8 +75,31 @@ class FileManager:
             self.Register.upchunknum(newChunk.getDataserverID(),1)
             newFile.appendChunk(newChunk)
         self.FileSystem.setdefault(newFile.getFID(),newFile)
+        self.show()
         return newFile
 
+    def show(self):
+        os.system('cls')
+        self.Register.show()
+        print('-------------------------FileLogicManager Table-------------------------------------')
+        print('   FileID  |             LogicPath        |        FileSize        |     ChunkList')
+     #   print('------------------------------------------------------------------------------------')
+        allchunk = []
+        for key,item in self.FileSystem.items():
+            listname = ''
+            for achunk in item.getChunkList():
+                listname += str(achunk.getChunkId()) + ','
+                allchunk.append((achunk.getChunkId(),achunk.getFileID(),achunk.getOffset(),achunk.getDataserverID(),achunk.ChunkSize))
+            print('No.%-10d %-30s %12d %15s'%(key,item.getpath(),item.getFsize(),listname))
+        print('------------------------ChunkManager Table----------------------------------------')
+        print('   ChunkID  | from(FileID,offset)  |store(DataServerID)|    ChunkSize')
+    #    print('---------------------------------------------------------------------------------')
+        for record in allchunk:
+            print('No.%-10d %5d %5d %20d %20d' % (record[0], record[1], record[2], record[3],record[4]))
+
+    def getNewCID(self):
+        self.CIDcout += 1
+        return self.CIDcout
     # 按ID查找
     def FindByFID(self,fid):
         return self.FileSystem.get(fid)
@@ -80,14 +113,23 @@ class FileManager:
     # 删除文件记录
     def DeleteFile(self,fid):
         deleteRecord = self.FileSystem.pop(fid)
+        self.show()
         return deleteRecord
 
     # 寻找文件块最少的服务器
     def FindDataServer(self):
         return self.Register.BestDataserver()
+
+    # 按照寻找
+    def getChunk(self,fid,cid):
+        if not fid in self.FileSystem:
+            return None
+        return self.FindByFID(fid).getChunk(cid)
     # 注册
     def RegistUp(self,ip,port):
-        return sys.Register.setrow(Register.HeadRegister().set(ip,port))
+        row = sys.Register.setrow(Register.HeadRegister().set(ip, port))
+        self.show()
+        return row
     # 查询
     def SeekSocket(self,did):
         ip = sys.Register.getrow(did).getIP()
@@ -95,19 +137,28 @@ class FileManager:
         return ip,port
     # 注销
     def LogOut(self,did):
-        return sys.Register.deleterow(did)
+        row = sys.Register.deleterow(did)
+        self.show()
+        return row
+
+    def upchunknum(self,key,changeNum):
+        self.Register.upchunknum(key,changeNum)
+        self.show()
+
+    def uplive(self, key, newAlive):
+        self.Register.uplive(key,newAlive)
+        self.show()
 
 sys = FileManager()
 
 if __name__ == '__main__':
-    row0 = Register.HeadRegister()
-    row0.set("1.2.3.4", 2000)
-    row1 = Register.HeadRegister()
-    row1.set("6.7.8.9", 3000)
-    t0 = sys.Register.setrow(row0)
-    t1 = sys.Register.setrow(row1)
-    myfile = sys.CreateFile('c:/ss/l.dat',1024)
-    t= sys.FindByFilenama('c:/ss/0l.dat')
+    t0 = sys.RegistUp("1.2.3.4", 2000)
+    t1 = sys.RegistUp("6.7.8.9", 3000)
+    myfile = sys.CreateFile('c:/ss/l.dat',3674*1000)
+    sys.DeleteFile(myfile.getFID())
+    sys.LogOut(t1)
+    sys.LogOut(t0)
+    t3 = sys.RegistUp("5.7.8.9", 3000)
 
    # print(myfile.getFID())
     # print(myfile.getpath())

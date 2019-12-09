@@ -1,12 +1,32 @@
-                                       // 编译命令 ：python -m grpc_tools.protoc --python_out=. --grpc_python_out=. -I. DataForMaster.proto
+ // 编译命令 ：python -m grpc_tools.protoc --python_out=. --grpc_python_out=. -I. DataForMaster.proto
 syntax = "proto3";
 
 // 这是数据服务器Server为控制服务器Master提供的服务DFM的协议
 
 service DFM {
-//服务：
-//请求：
-//返回：
-
+    //事物：chunk删除
+    //服务：master删除数据服务器上的chunk
+    //请求：chunkID
+    //返回：状态码
+    rpc deleteChunkOnDataServer(chunkID) returns (ACK1) {}
+    //事物：异常处理、备份
+    //服务：chunk从服务器复制到别的服务器上
+    //请求：将被复制的cid，发往新的服务器ip，port，新的cid
+    //返回：状态码
+    rpc copyChunkBetweenDataServer(copyChunk) returns (ACK1) {}
 }
 
+message copyChunk {
+    int32 CID = 1;
+    string copyip = 2;
+    int32 copyport = 3;
+    int32 copycid = 4;
+}
+
+message chunkID {
+    int32 CID = 1; 
+}
+
+message ACK1{
+    bool feedback = 1;
+}

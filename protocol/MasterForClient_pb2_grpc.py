@@ -64,8 +64,8 @@ class MFCServicer(object):
 
     事物：文件删除
     服务：客户删除指定路径下的某个文件
-    请求：无内容请求
-    返回：状态码
+    请求：文件路径
+    返回：状态码，返回信息
     """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')

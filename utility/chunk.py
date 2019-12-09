@@ -22,6 +22,10 @@ def readchunk(address):
     with open(address, 'rb') as f:  # open file with write-mode
          return pickle.load(f)
 
+def removechunk(achunk):
+    path = achunk.getAddress()
+    os.remove(path)
+
 class chunk:
     def __init__(self):
         self.ChunkSize = CHUNK_SIZE # 文件块大小

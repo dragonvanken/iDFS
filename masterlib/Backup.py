@@ -89,17 +89,28 @@ class BackupManage:
             return False
         self.MainAndBackupList[maincid].delete(cid)
         return True
-    # 开始需要备份的任务
-    def startCreateTask(self,cid):
-        self.BackupTask.append((cid,True))
-    # 开始需要删除备份的任务
-    def startDeleteTask(self,cid):
-        self.BackupTask.append((cid,False))
-
+    # 添加需要备份的任务
+    def insertCreateTask(self,fid,cid):
+        self.BackupTask.append((fid,cid,True))
+    # 添加需要删除备份的任务
+    def insertDeleteTask(self,fid,cid):
+        self.BackupTask.append((fid,cid,False))
+    # 开始一个备份任务
     def start(self):
-        TaskList = self.BackupTask
-        self.BackupTask.clear()
-        
+        if not len(self.BackupTask) > 0:
+            return None
+        return self.BackupTask.pop(0)
+    # 完成一个备份任务 任务以及任务结果
+    def end(self,maincid,achunk = None):
+        if achunk is None:
+            self.deleteAbackupQue(maincid)
+            self.updateMainchunk(maincid)
+        else:
+            if maincid not in self.MainAndBackupList:
+                self.createMainchunk(maincid)
+            self.createAbackup(maincid, achunk)
+
+
 BackupManager = BackupManage()
 
 if __name__ == '__main__':

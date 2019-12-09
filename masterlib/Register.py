@@ -13,6 +13,8 @@ class HeadRegister:
         self.alive = alive
         self.chunknumber = num
         return self
+    def getDID(self):
+        return self.DID
 
     def getIP(self):
         return self.IP
@@ -20,10 +22,33 @@ class HeadRegister:
     def getport(self):
         return self.Port
 
+    def getload(self):
+        return self.chunknumber
+
+    def getstatus(self):
+        return self.alive
+
+    def setload(self,load):
+        self.chunknumber = load
+
+    def setstatus(self,status):
+        self.alive = status
+
 class Register:
     def __init__(self):
         self.table = dict()
         self.DIDstuct = 0
+
+    def show(self):
+        print('--------------------------Register Table--------------------------------------')
+        print('DataServerID |         IP          |    Port   |    Load    |   status')
+     #   print('-----------------------------------------------------------------------------')
+        for did,items in self.table.items():
+            if items.getstatus() == 1:
+                status = 'online'
+            else:
+                status = 'uncertain'
+            print('No.%-10d %15s %12d %10d %15s'%(did, items.getIP(),items.getport(),items.getload(),status))
 
     def setrow(self,row):
         if not isinstance(row, HeadRegister):

@@ -149,6 +149,7 @@ class Tree:
                 cur_node = cur_node.brother
         return None
 
+
     def seriesToPath(self):
         self.__makePath()
         path_list = []
@@ -156,13 +157,17 @@ class Tree:
             path_list.append((node.path, node.isFolder))
         return path_list
 
-    def getNodes(self, FilePath):
+    def getLeafNodes(self, FilePath):
         self.__makePath()
         mynode = self.seek(FilePath)
         assert mynode != None
         path_list = []
-        for node in self.BFS(path=mynode):
-            path_list.append(node.path)
+        if mynode.isFolder == False:
+            path_list.append(mynode.path)
+        if mynode.child != None:
+            for node in self.BFS(FilePath=mynode.child):
+                if node.isFolder == False:
+                    path_list.append(node.path)
         return path_list
 
     def deseriesFromPath(self, path_list):
@@ -186,6 +191,7 @@ class Tree:
                 cur_note = cur_note.brother
             else:
                 cur_note = stack.pop(0)
+                
     def print_tree(self):
         tmp = AbstractNode('tmp', True)
         tmp.child = self.root
@@ -220,3 +226,5 @@ if __name__ == "__main__":
     print(new_tr)
 
     new_tr.print_tree()
+
+    print(new_tr.getLeafNodes('b/d/e/a'))

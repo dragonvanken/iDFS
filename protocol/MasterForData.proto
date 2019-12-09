@@ -12,7 +12,7 @@ service MFD{
     //服务：二次提交
     //请求：FID、CID、状态🏇
     //返回：是否提交
-    rpc Recommit(recommitRequest) returns (recommitResponse){}
+    rpc Recommit(recommitRequest) returns (recommitResponse) {}
 }
 
 message Num{

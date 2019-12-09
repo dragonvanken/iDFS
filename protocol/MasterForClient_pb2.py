@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x15MasterForClient.proto\"\n\n\x08\x45mptyArg\"%\n\x03Str\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x10\n\x08isFolder\x18\x02 \x01(\x08\"G\n)getChunkInfoAndAllocatedDataServerRequest\x12\x0c\n\x04size\x18\x01 \x01(\x05\x12\x0c\n\x04path\x18\x02 \x01(\t\"~\n\rChunkStructor\x12\x11\n\tChunkSize\x18\x01 \x01(\x05\x12\x0f\n\x07\x43hunkId\x18\x02 \x01(\x05\x12\r\n\x05inFID\x18\x03 \x01(\x05\x12\x0e\n\x06offset\x18\x04 \x01(\x05\x12\x10\n\x08StoreDID\x18\x05 \x01(\x05\x12\n\n\x02ip\x18\x06 \x01(\t\x12\x0c\n\x04port\x18\x07 \x01(\x05\"*\n\x08\x46ilePath\x12\x0c\n\x04path\x18\x01 \x01(\t\x12\x10\n\x08isFolder\x18\x02 \x01(\x08\"\x17\n\x03\x41\x43K\x12\x10\n\x08\x66\x65\x65\x64\x42\x61\x63k\x18\x01 \x01(\x08\x32\xb0\x01\n\x03MFC\x12\"\n\x0bgetFiletree\x12\t.EmptyArg\x1a\x04.Str\"\x00\x30\x01\x12\x64\n\"getChunkInfoAndAllocatedDataServer\x12*.getChunkInfoAndAllocatedDataServerRequest\x1a\x0e.ChunkStructor\"\x00\x30\x01\x12\x1f\n\ndeleteFile\x12\t.FilePath\x1a\x04.ACK\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x15MasterForClient.proto\"\n\n\x08\x45mptyArg\"%\n\x03Str\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x10\n\x08isFolder\x18\x02 \x01(\x08\"G\n)getChunkInfoAndAllocatedDataServerRequest\x12\x0c\n\x04size\x18\x01 \x01(\x05\x12\x0c\n\x04path\x18\x02 \x01(\t\"~\n\rChunkStructor\x12\x11\n\tChunkSize\x18\x01 \x01(\x05\x12\x0f\n\x07\x43hunkId\x18\x02 \x01(\x05\x12\r\n\x05inFID\x18\x03 \x01(\x05\x12\x0e\n\x06offset\x18\x04 \x01(\x05\x12\x10\n\x08StoreDID\x18\x05 \x01(\x05\x12\n\n\x02ip\x18\x06 \x01(\t\x12\x0c\n\x04port\x18\x07 \x01(\x05\"*\n\x08\x46ilePath\x12\x0c\n\x04path\x18\x01 \x01(\t\x12\x10\n\x08isFolder\x18\x02 \x01(\x08\"$\n\x03\x41\x43K\x12\x10\n\x08\x66\x65\x65\x64\x42\x61\x63k\x18\x01 \x01(\x08\x12\x0b\n\x03msg\x18\x02 \x01(\t2\xb0\x01\n\x03MFC\x12\"\n\x0bgetFiletree\x12\t.EmptyArg\x1a\x04.Str\"\x00\x30\x01\x12\x64\n\"getChunkInfoAndAllocatedDataServer\x12*.getChunkInfoAndAllocatedDataServerRequest\x1a\x0e.ChunkStructor\"\x00\x30\x01\x12\x1f\n\ndeleteFile\x12\t.FilePath\x1a\x04.ACK\"\x00\x62\x06proto3')
 )
 
 
@@ -251,6 +251,13 @@ _ACK = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='msg', full_name='ACK.msg', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -264,7 +271,7 @@ _ACK = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=321,
-  serialized_end=344,
+  serialized_end=357,
 )
 
 DESCRIPTOR.message_types_by_name['EmptyArg'] = _EMPTYARG
@@ -325,8 +332,8 @@ _MFC = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=347,
-  serialized_end=523,
+  serialized_start=360,
+  serialized_end=536,
   methods=[
   _descriptor.MethodDescriptor(
     name='getFiletree',

@@ -1,5 +1,5 @@
 from utility import chunk
-
+import  os
 class StoreManage:
     def __init__(self):
         self.TmpChunk = {} #  临时存储表
@@ -11,7 +11,7 @@ class StoreManage:
 
     def store(self,achunk,used = False):
         if not isinstance(achunk,chunk.chunk):
-            return -1
+            return False
         storeAddress = self._EnAddress(achunk.getChunkId())
         achunk.setAdress(storeAddress)
         chunk.savechunk(storeAddress,achunk)
@@ -20,6 +20,8 @@ class StoreManage:
             self.UsedChunk.setdefault(achunk.getChunkId(),achunk)
         else :
             self.TmpChunk.setdefault(achunk.getChunkId(),achunk)
+            self.show()
+        return True
 
     def get(self,cid):
         if not cid in self.UsedChunk:
@@ -33,24 +35,49 @@ class StoreManage:
         achunk = self.TmpChunk.get(cid)
         self.UsedChunk.setdefault(cid,achunk)
         self.TmpChunk.pop(cid)
+        self.show()
+        return True
 
-    def aborted(self, cid, used):
+    def aborted(self, cid, used = True):
         if used:
             if not cid in self.UsedChunk:
                 return False
-            self.UsedChunk.pop(cid)
+            else:
+                aachunk = self.UsedChunk.pop(cid)
+                chunk.removechunk(aachunk)
+                self.show()
+                return True
         else:
-            self.TmpChunk.pop(cid)
+            if not cid in self.TmpChunk:
+                return False
+            else:
+                aachunk = self.TmpChunk.pop(cid)
+                chunk.removechunk(aachunk)
+                self.show()
+                return True
 
     def setDID(self,did):
         self.DID = did
+        self.show()
+        return True
 
     def getDID(self):
         return  self.DID
 
+    def show(self):
+        os.system('cls')
+        print('The ServerID:',self.getDID())
+        print('------------------------ChunkManager Table----------------------------------------')
+        print('   ChunkID  | from(FileID,offset)  |store(Address)|   ChunkSize | status')
+        for key,achunk in self.UsedChunk.items():
+            print('No.%-10d %5d %5d %20d %15d %20s' % (key, achunk.getFileID(),achunk.getOffset(),achunk.getDataserverID(),achunk.ChunkSize,'Permanent Storage'))
+        for key,achunk in self.TmpChunk.items():
+            print('No.%-10d %5d %5d %20d %15d %20s' % (key, achunk.getFileID(),achunk.getOffset(),achunk.getDataserverID(),achunk.ChunkSize,'Temporary Storage'))
+
 StoreManager = StoreManage()
 
 if __name__ == '__main__':
+    StoreManager.setDID(987)
     achunk = chunk.chunk()
     achunk.setCID(7)
     achunk.setContent('are you OK?')
