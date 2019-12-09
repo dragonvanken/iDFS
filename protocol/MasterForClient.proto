@@ -15,6 +15,11 @@ service MFC {
     //返回：状态码、分配的上传服务器（Data Server）信息、文件分块信息
     rpc getChunkInfoAndAllocatedDataServer(getChunkInfoAndAllocatedDataServerRequest) returns (stream ChunkStructor) {}
 
+    //服务：创建文件夹
+    //请求：文件夹路径
+    //返回：状态🏇
+    rpc createFolder(createFolderRequest) returns (ACK) {}
+
     //事物：文件下载
     //服务：客户获取文件信息并申请Data Server以供文件下载
     //请求：预下载文件在DFS中存放路径
@@ -74,4 +79,8 @@ message targetInfo{
     int32 ChunkSize = 3;
     int32 ChunkId = 4;
     bool status = 5;
+}
+
+message createFolderRequest{
+    string destination = 1;
 }

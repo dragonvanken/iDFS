@@ -73,20 +73,23 @@ def getTree(stub):
 def isUniquePath(destination):
     return filetree.FileTree.seek(destination) is None
 
-def upload(stub):
+def upload(stub, cur_node, user_input):
+    path, destination = user_input.split()[1], user_input.split()[2]
     print('uploading')
-    """ try:
-        upfile(stub)
+    try:
+        destination = cur_node.path + '/' + destination
+
+        if not isUniquePath(destination):
+            print(colored('Unavailable path, please retry.', 'red'))
+        else:
+            upfile(stub, path, destination)
+            print(colored('Successfully upload file '+path+' to '+destination,'green'))
+            fetch(stub)
+            cur_node = filetree.FileTree.seek(cur_node.path)
     except:
         print(colored('Bad connection.', 'red'))
-        print(colored('Please retry.', 'red')) """
-    path = 'ppp'
-    destination = 'root/ppp'
-    if not isUniquePath(destination):
-        print(colored('Unavailable path, please retry.', 'red'))
-    else:
-        upfile(stub, path, destination)
-        print(colored('Successfully upload file '+path+' to '+destination,'green'))
+        print(colored('Please retry.', 'red'))
+    return cur_node
 
 def fetch(stub):
     print('Fetching remote information.')
@@ -98,33 +101,92 @@ def fetch(stub):
         print(colored('Bad connection.', 'red'))
         print(colored('Please retry.', 'red'))
 
+def showSubFiles(cur_node):
+    nodes = cur_node.getChildren()
+    if len(nodes) == 0:
+        print('Empty folder.')
+    else:
+        for node in nodes:
+            print(colored(node.name, 'green' if node.isFolder else None))
+
+def cd(cur_node, user_input):
+    destination = user_input.split()[1]
+    if destination == '..':
+        if cur_node.parent:
+            cur_node = cur_node.parent
+            print(cur_node.path)
+    elif destination == '.':
+        print(cur_node.path)
+    else:
+        target_path = cur_node.path + '/' + destination
+        target_node = filetree.FileTree.seek(target_path)
+        if target_node:
+            if target_node.isFolder:
+                cur_node = target_node
+                print(cur_node.path)
+            else:
+                print(colored(destination+' is not a folder.', 'red'))
+        else:
+            print(colored(destination+' not found.', 'red'))
+    return cur_node
+
+def mkdir(stub, cur_node, user_input):
+    dir_name = user_input.split()[1]
+    destination = cur_node.path + '/' + dir_name
+    if filetree.FileTree.seek(destination) is None:
+        result = stub.createFolder(MasterForClient_pb2.createFolderRequest(destination=destination))
+        if result.feedBack:
+            print(colored('Create folder ' + dir_name + ' done.', 'green'))
+            fetch(stub)
+    else:
+        print(colored(dir_name + ' is used, please chooes another folder name.', 'red'))
+
 def showAllCommands():
     print('iDFS is a Distribution File System written by WanKeJia group for NUDT distribution system cource.\n')
     print('All commands:')
-    print('\tfetch:')
-    print('\t\t更新并显示文件目录结构')
 
-    print('\tupload')
-    print('\t\t上传文件')
+    print(colored('\tcd [folder]', 'green'))
+    print('\t\t进入当前路径下的某个目录\n')
 
-    print('\tdelete')
-    print('\t\t删除文件')
+    print(colored('\tmkdir [folder]', 'green'))
+    print('\t\t在当前路径下新建一个目录\n')
 
-    print('\tquit or exit')
-    print('\t\t退出系统')
+    print(colored('\tfetch','green'))
+    print('\t\t更新并显示文件目录结构\n')
+
+    print(colored('\tupload [file_path] [destination_path]', 'green'))
+    print('\t\t上传本地文件到指定目录\n')
+
+    print(colored('\tdelete', 'green'))
+    print('\t\t删除文件\n')
+
+    print(colored('\tquit/exit', 'green'))
+    print('\t\t退出系统\n')
+
 # 用户端命令行界面
 def user_interface():
     stub = ConnectMaster()
     fetch(stub)
+    cur_node = filetree.FileTree.root
     while(True):
         print(colored("\nPlease input command:", 'green'), end='')
-        cmd = input().lower().strip()
+        user_input = input().lower().strip()
+        cmd = user_input.split()[0]
+
         if cmd == 'h' or cmd == 'help':
             showAllCommands()
+        elif cmd == 'cd':
+            cur_node = cd(cur_node, user_input)
+        elif cmd == 'mkdir':
+            mkdir(stub, cur_node, user_input)
+        elif cmd == 'pwd':
+            print(cur_node.path)
+        elif cmd == 'ls':
+            showSubFiles(cur_node)
         elif cmd == 'fetch':
             fetch(stub)
         elif cmd == 'upload':
-            upload(stub)
+            cur_node = upload(stub, cur_node, user_input)
         elif cmd == 'delete':
             deleteFile(stub)
         elif cmd == 'download':
@@ -181,7 +243,13 @@ def downloadFile(stub):
         cid = chk.ChunkId
         mystub = ConnectDataServer(ip + ':' + str(port))
         chunkData = downloadChunk(mystub, cid)
-        dataList.append(chunkData)
+        theChunk = chunk.chunk()
+        theChunk.ChunkSize = chunkData.ChunkSize
+        theChunk.ChunkId = chunkData.ChunkId
+        theChunk.inFID = chunkData.inFID
+        theChunk.offset = chunkData.offset
+        theChunk.Content = chunkData.Content
+        dataList.append(theChunk)
     name = path.split('/')[-1]
     chunk.merge(dataList, name)
     print('%s Download Successful!!'% name)

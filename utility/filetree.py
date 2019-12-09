@@ -48,6 +48,14 @@ class AbstractNode:
     def getbrother(self):
         return self.brother
 
+    def getChildren(self):
+        children = []
+        cur_node = self.child
+        while(cur_node):
+            children.append(cur_node)
+            cur_node = cur_node.brother
+        return children
+
 
 class Tree:
     def __init__(self):
@@ -188,6 +196,8 @@ class Tree:
         """返回一个按照广度优先搜索顺序抛出节点的生成器"""
         if FilePath is None:
             FilePath = self.root
+        else:
+            FilePath = self.seek(FilePath)
         stack = []
         cur_note = FilePath
         while (cur_note or len(stack)):
@@ -198,7 +208,7 @@ class Tree:
                 cur_note = cur_note.brother
             else:
                 cur_note = stack.pop(0)
-                
+
     def print_tree(self):
         tmp = AbstractNode('tmp', True)
         tmp.child = self.root

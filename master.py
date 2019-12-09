@@ -63,6 +63,10 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
         for responds in respondlist:
             yield responds
 
+    def createFolder(self, request, context):
+        destination = request.destination
+        return MasterForClient_pb2.ACK(feedBack=filetree.FileTree.insertNode(destination, True), msg='dummy message') 
+
     def deleteFile(self, request, context):
         FilePath = request.path
         # isFolder = request.isFolder
@@ -108,19 +112,17 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
     def requestDownloadFromMaster(self, request, context):
         requestFile = request.path
         temp = FileManager.sys.FindByFilenama(requestFile)
-        chunkList = []
         if not temp:
             return MasterForClient_pb2.targetInfo(
-                status=0
+                status=0,
             )
-        else:
-            chunkList = temp.getChunkList()
-
+        chunkList = temp.getChunkList()
         responseList = []
         for chk in chunkList:
+            ip, port = FileManager.sys.SeekSocket(chk.getDataserverID())
             rsps = MasterForClient_pb2.targetInfo(
-                ip = chk.ip,   
-                port = chk.port,
+                ip = ip,
+                port = port,
                 ChunkSize = chk.ChunkSize,
                 ChunkId = chk.ChunkId,
                 status = 1
