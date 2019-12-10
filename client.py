@@ -13,7 +13,7 @@ import multiprocessing
 import threading
 import time
 
-MASTER_ADDRESS = '192.168.43.71:50051'
+MASTER_ADDRESS = 'localhost:50051'
 
 def SendChunkToDataserver(args):
     address, cchunk = args
@@ -165,6 +165,9 @@ def showAllCommands():
     print('\t\t更新并显示文件目录结构\n')
 
     print(colored('\tupload [file_path] [destination_path]', 'green'))
+    print('\t\t上传本地文件到指定目录\n')
+
+    print(colored('\tdownload [file_path] [destination_name]', 'green'))
     print('\t\t上传本地文件到指定目录\n')
 
     print(colored('\tdelete', 'green'))

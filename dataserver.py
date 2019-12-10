@@ -14,7 +14,7 @@ from utility import network
 from datalib import StoreManager
 
 
-MASTER_ADDRESS = '192.168.43.71:50051'
+MASTER_ADDRESS = 'localhost:50051'
 
 class DFM(DataForMaster_pb2_grpc.DFMServicer):
     def deleteChunkOnDataServer(self, request, context):
