@@ -62,6 +62,7 @@ class BackupManage:
         self.createBackupQue(newmainchunk.getChunkId(),bq)
 
         self.MainAndBackupList.pop(maincid)
+        self.show()
         return newmainchunk
     # 导入备份队列
     def createBackupQue(self, maincid, bq):
@@ -98,6 +99,14 @@ class BackupManage:
             return False
         self.MainAndBackupList[maincid].delete(cid)
         return True
+    # 删除一个备份
+    def deleteBycid(self,cid):
+        for key,items in self.MainAndBackupList.items():
+            for back in items.getall():
+                if back.getChunkId() == cid:
+                    self.deleteAbackup(key,cid)
+                    return key
+
     # 添加需要备份的任务
     def insertCreateTask(self,fid,cid):
         self.BackupTask.append((fid,cid,True))
@@ -120,7 +129,15 @@ class BackupManage:
             if maincid not in self.MainAndBackupList:
                 self.createMainchunk(maincid)
             self.createAbackup(maincid, achunk)
+        self.show()
 
+    def show(self):
+        print('------------------------BackupManager Table----------------------------------------')
+        print('   BackupChunkID  | mainChunkID  |store(DataServerID)|    ChunkSize')
+        #    print('---------------------------------------------------------------------------------')
+        for maincid ,record in self.MainAndBackupList.items():
+            for abackup in record.getall():
+                print('No.%-10d %10d %20d %20d' % (abackup.getChunkId(),maincid, abackup.getDataserverID(), abackup.ChunkSize))
 
 BackupManager = BackupManage()
 

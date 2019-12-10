@@ -115,8 +115,28 @@ class Register:
                 minvalue = rows.chunknumber
         return mindid
 
+    def BesetBackupserver(self,did):
+        minvalue = 9999
+        mindid = -1
+        for rows in self.table.values():
+            if not rows.alive == 1:
+                continue
+            if rows.DID == did:
+                continue
+            if rows.chunknumber < minvalue:
+                mindid = rows.DID
+                minvalue = rows.chunknumber
+        return mindid
+
+    def getonlinedid(self):
+        count = 0
+        for rows in self.table.values():
+            if rows.alive == 1:
+                count += 1
+        return count
+
     def getalldataserverdid(self):
-        return self.table.keys()
+        return list(self.table.keys())
 
 if __name__ == '__main__':
     RegisteTable = Register()

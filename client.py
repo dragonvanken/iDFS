@@ -223,6 +223,7 @@ def deleteFile(stub, cur_node, user_input):
     )
     ack = stub.deleteFile(pakage)
     print(ack.msg)
+    fetch(stub)
     return filetree.FileTree.seek(cur_node.path)
 
 

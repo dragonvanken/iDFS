@@ -19,6 +19,11 @@ service DFM {
     //请求：文件块id
     //返回：状态🏇
     rpc recommitChunk(chunkID) returns (ACK1) {}
+
+    //服务：心跳包
+    //请求：无
+    //返回：状态
+    rpc heartbeat(heartrequest) returns (ACK1){}
 }
 
 message copyChunk {
@@ -34,4 +39,8 @@ message chunkID {
 
 message ACK1{
     bool feedback = 1;
+}
+
+message heartrequest{
+    int32 did=1;
 }

@@ -22,7 +22,9 @@ class AFile:
         for item in self.ChunkList:
             if item.getChunkId() == CID:
                 self.ChunkList.remove(item)
-                break
+                return True
+        return False
+
     def setFszie(self,s):
         self.size = s
 
@@ -110,6 +112,12 @@ class FileManager:
         Afile = self.FindByFilenama(path)
         chunklist = Afile.getChunkList()
         return chunklist
+    def seekbyCID(self,cid):
+        for key,afiles in self.FileSystem.items():
+            for s in afiles.getChunkList():
+                if s.getChunkId() == cid:
+                    return key
+        return 0
 
     def getNewCID(self):
         self.CIDcout += 1
@@ -124,6 +132,10 @@ class FileManager:
                 fids = files.FileId
                 return self.FindByFID(fids)
 
+    def deleteChunk(self,fid,cid):
+        if not fid in self.FileSystem:
+            return False
+        return self.FileSystem[fid].deleteChunk(cid)
     # 删除文件记录
     def DeleteFile(self,fid):
         aFile = self.FileSystem.get(fid)
@@ -136,7 +148,9 @@ class FileManager:
     # 寻找文件块最少的服务器
     def FindDataServer(self):
         return self.Register.BestDataserver()
-
+    #寻找排除掉主节点的文件块最少的服务器
+    def FindBackupServer(self, did):
+        return self.Register.BesetBackupserver(did)
     # 按照寻找
     def getChunk(self,fid,cid):
         if not fid in self.FileSystem:
@@ -154,13 +168,11 @@ class FileManager:
         return ip,port
 
     def SeekChunkOnDid(self,did):
-        allChunk = []
-        for key,item in self.FileSystem.items():
-            list = item.getChunkList()
-            for achunk in list:
-                if achunk.getDataserverID() == did:
-                    allChunk.append(achunk)
-        return allChunk
+        chunklist = self.Register.getrow(did).getchunklist()
+        return chunklist
+
+    def sizeOfonlineDataserver(self):
+        return self.Register.getonlinedid()
     # 注销
     def LogOut(self,did):
         row = sys.Register.deleterow(did)
@@ -169,6 +181,7 @@ class FileManager:
 
     def getalldataserver(self):
         return self.Register.getalldataserverdid()
+
 
     def upchunkonRegister(self,key,changeNum,achunk):
         self.Register.upchunkondataserver(key,changeNum,achunk)
@@ -180,8 +193,6 @@ class FileManager:
 
     def upMainChunk(self,achunk):
         fid = achunk.getFileID()
-        cid = achunk.getChunkId()
-        self.FileSystem[fid].deleteChunk(cid)
         self.FileSystem[fid].appendChunk(achunk)
         self.show()
 

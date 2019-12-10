@@ -1,6 +1,6 @@
 import grpc
 import socket
-import multiprocessing
+import time
 from termcolor import colored
 from concurrent import futures
 from protocol import MasterForData_pb2
@@ -66,6 +66,13 @@ class DFM(DataForMaster_pb2_grpc.DFMServicer):
         StoreManager.StoreManager.commit(cid)
         print('commit', cid)
         return DataForMaster_pb2.ACK1(feedback=True)
+
+    def heartbeat(self, request, context):
+        did = request.did
+        if did == StoreManager.StoreManager.getDID():
+            return DataForMaster_pb2.ACK1(feedback = True)
+        else:
+            return DataForMaster_pb2.ACK1(feedback = False)
 
 def vote(FID, CID, status):
     channel = grpc.insecure_channel(MASTER_ADDRESS)
@@ -147,7 +154,11 @@ def serve():
     DataForMaster_pb2_grpc.add_DFMServicer_to_server(DFM(),server)
     server.add_insecure_port('[::]:' + str(port))
     server.start()
-    server.wait_for_termination()
+    try:
+        while True:
+            time.sleep(10)  # one day in seconds 60*60*24
+    except KeyboardInterrupt:
+        server.stop(0)
 
 
 if __name__ == '__main__':

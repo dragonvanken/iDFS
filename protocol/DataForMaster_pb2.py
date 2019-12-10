@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x13\x44\x61taForMaster.proto\"K\n\tcopyChunk\x12\x0b\n\x03\x43ID\x18\x01 \x01(\x05\x12\x0e\n\x06\x63opyip\x18\x02 \x01(\t\x12\x10\n\x08\x63opyport\x18\x03 \x01(\x05\x12\x0f\n\x07\x63opycid\x18\x04 \x01(\x05\"\x16\n\x07\x63hunkID\x12\x0b\n\x03\x43ID\x18\x01 \x01(\x05\"\x18\n\x04\x41\x43K1\x12\x10\n\x08\x66\x65\x65\x64\x62\x61\x63k\x18\x01 \x01(\x08\x32\x8a\x01\n\x03\x44\x46M\x12,\n\x17\x64\x65leteChunkOnDataServer\x12\x08.chunkID\x1a\x05.ACK1\"\x00\x12\x31\n\x1a\x63opyChunkBetweenDataServer\x12\n.copyChunk\x1a\x05.ACK1\"\x00\x12\"\n\rrecommitChunk\x12\x08.chunkID\x1a\x05.ACK1\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x13\x44\x61taForMaster.proto\"K\n\tcopyChunk\x12\x0b\n\x03\x43ID\x18\x01 \x01(\x05\x12\x0e\n\x06\x63opyip\x18\x02 \x01(\t\x12\x10\n\x08\x63opyport\x18\x03 \x01(\x05\x12\x0f\n\x07\x63opycid\x18\x04 \x01(\x05\"\x16\n\x07\x63hunkID\x12\x0b\n\x03\x43ID\x18\x01 \x01(\x05\"\x18\n\x04\x41\x43K1\x12\x10\n\x08\x66\x65\x65\x64\x62\x61\x63k\x18\x01 \x01(\x08\"\x1b\n\x0cheartrequest\x12\x0b\n\x03\x64id\x18\x01 \x01(\x05\x32\xaf\x01\n\x03\x44\x46M\x12,\n\x17\x64\x65leteChunkOnDataServer\x12\x08.chunkID\x1a\x05.ACK1\"\x00\x12\x31\n\x1a\x63opyChunkBetweenDataServer\x12\n.copyChunk\x1a\x05.ACK1\"\x00\x12\"\n\rrecommitChunk\x12\x08.chunkID\x1a\x05.ACK1\"\x00\x12#\n\theartbeat\x12\r.heartrequest\x1a\x05.ACK1\"\x00\x62\x06proto3')
 )
 
 
@@ -139,9 +139,41 @@ _ACK1 = _descriptor.Descriptor(
   serialized_end=148,
 )
 
+
+_HEARTREQUEST = _descriptor.Descriptor(
+  name='heartrequest',
+  full_name='heartrequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='did', full_name='heartrequest.did', index=0,
+      number=1, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=150,
+  serialized_end=177,
+)
+
 DESCRIPTOR.message_types_by_name['copyChunk'] = _COPYCHUNK
 DESCRIPTOR.message_types_by_name['chunkID'] = _CHUNKID
 DESCRIPTOR.message_types_by_name['ACK1'] = _ACK1
+DESCRIPTOR.message_types_by_name['heartrequest'] = _HEARTREQUEST
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 copyChunk = _reflection.GeneratedProtocolMessageType('copyChunk', (_message.Message,), {
@@ -165,6 +197,13 @@ ACK1 = _reflection.GeneratedProtocolMessageType('ACK1', (_message.Message,), {
   })
 _sym_db.RegisterMessage(ACK1)
 
+heartrequest = _reflection.GeneratedProtocolMessageType('heartrequest', (_message.Message,), {
+  'DESCRIPTOR' : _HEARTREQUEST,
+  '__module__' : 'DataForMaster_pb2'
+  # @@protoc_insertion_point(class_scope:heartrequest)
+  })
+_sym_db.RegisterMessage(heartrequest)
+
 
 
 _DFM = _descriptor.ServiceDescriptor(
@@ -173,8 +212,8 @@ _DFM = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=151,
-  serialized_end=289,
+  serialized_start=180,
+  serialized_end=355,
   methods=[
   _descriptor.MethodDescriptor(
     name='deleteChunkOnDataServer',
@@ -200,6 +239,15 @@ _DFM = _descriptor.ServiceDescriptor(
     index=2,
     containing_service=None,
     input_type=_CHUNKID,
+    output_type=_ACK1,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='heartbeat',
+    full_name='DFM.heartbeat',
+    index=3,
+    containing_service=None,
+    input_type=_HEARTREQUEST,
     output_type=_ACK1,
     serialized_options=None,
   ),

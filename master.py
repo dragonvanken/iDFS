@@ -151,29 +151,45 @@ def serve():
     try:
         while True:
             time.sleep(10)  # one day in seconds 60*60*24
-         #   heartbeat()  # 心跳检测
+            heartbeat()  # 心跳检测
             startbackup() # 备份更新
     except KeyboardInterrupt:
         server.stop(0)
 
 def heartbeat():
     examdid = FileManager.sys.getalldataserver()
-    for did in examdid:
-        ip,port = FileManager.sys.SeekSocket(did)
+    print(list(examdid))
+    for did in list(examdid):
         try:
             # send heartpackage to DS
-            s=1
+            stub = ConnectDataServer(did)
+            sendheartbeat(stub,did)
         except:
             if FileManager.sys.Register.getrow(did).getstatus() == 1:
                 FileManager.sys.uplive(did,0)
                 chunkondid = FileManager.sys.SeekChunkOnDid(did)
-                for mainchunk in chunkondid:
-                    newmainchunk = Backup.BackupManager.updateMainchunk(mainchunk.getChunkId())
-                    if newmainchunk is not None:
-                        FileManager.sys.upMainChunk(newmainchunk)
+                if len(chunkondid) > 0:
+                    for mainchunk in chunkondid:
+                        ismain = FileManager.sys.deleteChunk(mainchunk.getFileID(), mainchunk.getChunkId())
+                        if ismain:
+                            newmainchunk = Backup.BackupManager.updateMainchunk(mainchunk.getChunkId())
+                            if newmainchunk == None:
+                                continue
+                            FileManager.sys.upMainChunk(newmainchunk)
+                            Backup.BackupManager.insertCreateTask(newmainchunk.getFileID(),newmainchunk.getChunkId())
+                        else:
+                            maincid= Backup.BackupManager.deleteBycid(mainchunk.getChunkId())
+                            mainfid = FileManager.sys.seekbyCID(maincid)
+                            print(mainfid)
+                            print(maincid)
+                            print('!!!')
+                            Backup.BackupManager.insertCreateTask(mainfid,maincid)
 
 def startbackup():
     while True:
+        if not FileManager.sys.sizeOfonlineDataserver() > 1:
+            print('The number of DataServer <= 1,The Backup sys close')
+            break
         task = Backup.BackupManager.start()
         if task is None:
             break
@@ -185,10 +201,9 @@ def startbackup():
             if achunk is None:
                 continue
             did = achunk.getDataserverID()
-
             newchunk = chunk.chunk()
             newcid = FileManager.sys.getNewCID()
-            newdid = FileManager.sys.FindDataServer()
+            newdid = FileManager.sys.FindBackupServer(achunk.getDataserverID())
             newchunk.setCID(newcid)
             newchunk.setDID(newdid)
             newchunk.setFileInfo(achunk.getFileID(),achunk.getOffset())
@@ -236,6 +251,12 @@ def copyChunkBetweenDataServer(stub,CID,copyip,copyport,copycid):
         copycid= copycid
     )
     return stub.copyChunkBetweenDataServer(package)
+
+def sendheartbeat(stub,did):
+    package = DataForMaster_pb2.heartrequest(
+        did =did
+    )
+    return stub.heartbeat(package)
 
 if __name__ == '__main__':
     filetree.FileTree.setroot(filetree.AbstractNode('root', True))
