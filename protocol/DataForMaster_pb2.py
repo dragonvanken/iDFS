@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x13\x44\x61taForMaster.proto\"K\n\tcopyChunk\x12\x0b\n\x03\x43ID\x18\x01 \x01(\x05\x12\x0e\n\x06\x63opyip\x18\x02 \x01(\t\x12\x10\n\x08\x63opyport\x18\x03 \x01(\x05\x12\x0f\n\x07\x63opycid\x18\x04 \x01(\x05\"\x16\n\x07\x63hunkID\x12\x0b\n\x03\x43ID\x18\x01 \x01(\x05\"\x18\n\x04\x41\x43K1\x12\x10\n\x08\x66\x65\x65\x64\x62\x61\x63k\x18\x01 \x01(\x08\x32\x66\n\x03\x44\x46M\x12,\n\x17\x64\x65leteChunkOnDataServer\x12\x08.chunkID\x1a\x05.ACK1\"\x00\x12\x31\n\x1a\x63opyChunkBetweenDataServer\x12\n.copyChunk\x1a\x05.ACK1\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x13\x44\x61taForMaster.proto\"K\n\tcopyChunk\x12\x0b\n\x03\x43ID\x18\x01 \x01(\x05\x12\x0e\n\x06\x63opyip\x18\x02 \x01(\t\x12\x10\n\x08\x63opyport\x18\x03 \x01(\x05\x12\x0f\n\x07\x63opycid\x18\x04 \x01(\x05\"\x16\n\x07\x63hunkID\x12\x0b\n\x03\x43ID\x18\x01 \x01(\x05\"\x18\n\x04\x41\x43K1\x12\x10\n\x08\x66\x65\x65\x64\x62\x61\x63k\x18\x01 \x01(\x08\x32\x8a\x01\n\x03\x44\x46M\x12,\n\x17\x64\x65leteChunkOnDataServer\x12\x08.chunkID\x1a\x05.ACK1\"\x00\x12\x31\n\x1a\x63opyChunkBetweenDataServer\x12\n.copyChunk\x1a\x05.ACK1\"\x00\x12\"\n\rrecommitChunk\x12\x08.chunkID\x1a\x05.ACK1\"\x00\x62\x06proto3')
 )
 
 
@@ -173,8 +173,8 @@ _DFM = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=150,
-  serialized_end=252,
+  serialized_start=151,
+  serialized_end=289,
   methods=[
   _descriptor.MethodDescriptor(
     name='deleteChunkOnDataServer',
@@ -191,6 +191,15 @@ _DFM = _descriptor.ServiceDescriptor(
     index=1,
     containing_service=None,
     input_type=_COPYCHUNK,
+    output_type=_ACK1,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='recommitChunk',
+    full_name='DFM.recommitChunk',
+    index=2,
+    containing_service=None,
+    input_type=_CHUNKID,
     output_type=_ACK1,
     serialized_options=None,
   ),

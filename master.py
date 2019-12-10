@@ -23,11 +23,22 @@ class MFD(MasterForData_pb2_grpc.MFDServicer):
 
     def Recommit(self, request, context):
         iscommit = FileManager.sys.vote(request.FID, request.CID)
-        # backup
-        Backup.BackupManager.insertCreateTask(request.FID, request.CID)
+
         if iscommit:
             # update filetree
             filetree.FileTree.insertNode(FileManager.sys.FindByFID(request.FID).path, False)
+            # ask dataserver commit
+            chunklist = FileManager.sys.FindByFID(request.FID).getChunkList()
+            for c in chunklist:
+                did = c.StoreDID
+                cid = c.ChunkId
+                ip, port = FileManager.sys.SeekSocket(did)
+                channel = grpc.insecure_channel(ip+':'+str(port))
+                stub = DataForMaster_pb2_grpc.DFMStub(channel)
+                stub.recommitChunk(DataForMaster_pb2.chunkID(CID=cid))
+                channel.close()
+                # backup
+                Backup.BackupManager.insertCreateTask(c.getFileID(), c.ChunkId)
         return MasterForData_pb2.recommitResponse(isCommit=iscommit)
 
 class MFC(MasterForClient_pb2_grpc.MFCServicer):
@@ -107,7 +118,7 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
                 msg='Failed!',
                 feedBack=False
             )
-            
+
     def requestDownloadFromMaster(self, request, context):
         requestFile = request.path
         temp = FileManager.sys.FindByFilenama(requestFile)
@@ -129,10 +140,6 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
             responseList.append(rsps)
         for response in responseList:
             yield response
-
-
-
-    
 
 
 def serve():

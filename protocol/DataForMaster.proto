@@ -14,6 +14,11 @@ service DFM {
     //请求：将被复制的cid，发往新的服务器ip，port，新的cid
     //返回：状态码
     rpc copyChunkBetweenDataServer(copyChunk) returns (ACK1) {}
+
+    //服务：提交文件块
+    //请求：文件块id
+    //返回：状态🏇
+    rpc recommitChunk(chunkID) returns (ACK1) {}
 }
 
 message copyChunk {
@@ -24,7 +29,7 @@ message copyChunk {
 }
 
 message chunkID {
-    int32 CID = 1; 
+    int32 CID = 1;
 }
 
 message ACK1{

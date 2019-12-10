@@ -61,19 +61,24 @@ class DFM(DataForMaster_pb2_grpc.DFMServicer):
             response= DataForMaster_pb2.ACK1(feedback=False)
         return response
 
+    def recommitChunk(self,request,context):
+        cid = request.CID
+        StoreManager.StoreManager.commit(cid)
+        print('commit', cid)
+        return DataForMaster_pb2.ACK1(feedback=True)
 
 def vote(FID, CID, status):
     channel = grpc.insecure_channel(MASTER_ADDRESS)
     stub = MasterForData_pb2_grpc.MFDStub(channel)
-    response = stub.Recommit(MasterForData_pb2.recommitRequest(
+    stub.Recommit(MasterForData_pb2.recommitRequest(
         FID=FID,
         CID=CID,
         status=status)
     )
     channel.close()
-    if True:
-        StoreManager.StoreManager.commit(CID)
-        print('Commit!')
+    #if True:
+    #    StoreManager.StoreManager.commit(CID)
+    #    print('Commit!')
 
 class DFC(DataForClient_pb2_grpc.DFCServicer):
     def uploadChunk(self, request, context):
@@ -123,6 +128,7 @@ class DFC(DataForClient_pb2_grpc.DFCServicer):
             Content=theChunk.getContent()
         )
         return package
+
 
 def register():
     channel = grpc.insecure_channel(MASTER_ADDRESS)
