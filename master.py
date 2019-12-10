@@ -9,6 +9,7 @@ from protocol import DataForMaster_pb2
 from protocol import DataForMaster_pb2_grpc
 from utility import filetree
 from utility import chunk
+from utility import network
 from masterlib import FileManager
 from masterlib import Backup
 
@@ -259,6 +260,7 @@ def sendheartbeat(stub,did):
     return stub.heartbeat(package)
 
 if __name__ == '__main__':
+    print("Master's IP is", network.getEthIp())
     filetree.FileTree.setroot(filetree.AbstractNode('root', True))
     FileManager.sys.show()
     serve()

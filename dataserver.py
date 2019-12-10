@@ -10,27 +10,11 @@ from protocol import DataForMaster_pb2_grpc
 from protocol import DataForClient_pb2
 from protocol import DataForClient_pb2_grpc
 from utility import chunk
+from utility import network
 from datalib import StoreManager
 
 
 MASTER_ADDRESS = 'localhost:50051'
-
-
-def getEthIp():
-    """返回本机局域网IP地址(str)"""
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("8.8.8.8", 80))
-    return s.getsockname()[0]
-
-
-def getOpenPort():
-    """选取一个空闲的端口并返回端口号(int)"""
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.bind(("", 0))
-    s.listen(1)
-    port = s.getsockname()[1]
-    s.close()
-    return int(port)
 
 class DFM(DataForMaster_pb2_grpc.DFMServicer):
     def deleteChunkOnDataServer(self, request, context):
@@ -140,8 +124,8 @@ class DFC(DataForClient_pb2_grpc.DFCServicer):
 def register():
     channel = grpc.insecure_channel(MASTER_ADDRESS)
     stub = MasterForData_pb2_grpc.MFDStub(channel)
-    ip = getEthIp()
-    port = getOpenPort()
+    ip = network.getEthIp()
+    port = network.getOpenPort()
     response = stub.RegisteServer(MasterForData_pb2.socket(ip=ip, port=port))
     StoreManager.StoreManager.setDID(response.id)
     return ip, port

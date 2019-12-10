@@ -13,6 +13,8 @@ import multiprocessing
 import threading
 import time
 
+MASTER_ADDRESS = 'localhost:50051'
+
 def SendChunkToDataserver(args):
     address, cchunk = args
     print(cchunk.ChunkId, address)
