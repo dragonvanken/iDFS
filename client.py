@@ -13,7 +13,7 @@ import multiprocessing
 import threading
 import time
 
-MASTER_ADDRESS = 'localhost:50051'
+MASTER_ADDRESS = '192.168.43.71:50051'
 
 def SendChunkToDataserver(args):
     address, cchunk = args
@@ -207,7 +207,7 @@ def user_interface():
             print('Invalid command. Please retry.')
 
 def ConnectMaster():
-    channel = grpc.insecure_channel('localhost:50051')
+    channel = grpc.insecure_channel(MASTER_ADDRESS)
     stub = MasterForClient_pb2_grpc.MFCStub(channel)
     return stub
 
