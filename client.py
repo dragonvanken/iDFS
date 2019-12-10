@@ -1,6 +1,7 @@
 import os
 import grpc
-from termcolor import colored
+from termcolor import *
+import colorama
 from protocol import MasterForClient_pb2
 from protocol import MasterForClient_pb2_grpc
 from protocol import DataForClient_pb2
@@ -11,7 +12,6 @@ import atexit
 import multiprocessing
 import threading
 import time
-
 
 def SendChunkToDataserver(args):
     address, cchunk = args
@@ -277,5 +277,6 @@ def downloadFile(stub, cur_node, user_input):
     return 1
     
 if __name__ == '__main__':
+    colorama.init()
     user_interface()
 
