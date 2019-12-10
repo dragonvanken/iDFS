@@ -92,9 +92,11 @@ class BackupManage:
     # 添加需要备份的任务
     def insertCreateTask(self,fid,cid):
         self.BackupTask.append((fid,cid,True))
+        print('create a backup:'+str(cid))
     # 添加需要删除备份的任务
     def insertDeleteTask(self,fid,cid):
         self.BackupTask.append((fid,cid,False))
+        print('delete a backup:' + str(cid))
     # 开始一个备份任务
     def start(self):
         if not len(self.BackupTask) > 0:

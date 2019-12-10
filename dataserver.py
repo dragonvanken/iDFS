@@ -40,9 +40,9 @@ class DFM(DataForMaster_pb2_grpc.DFMServicer):
 
     def copyChunkBetweenDataServer(self, request, context):
         cid = request.CID
-        address = request.newip + ':' + str(request.newport)
+        address = request.copyip + ':' + str(request.copyport)
         cchunk = StoreManager.StoreManager.get(cid)
-        cchunk.setCID(request.newcid)
+        cchunk.setCID(request.copycid)
         channel = grpc.insecure_channel(address)
         stub = DataForClient_pb2_grpc.DFCStub(channel)
         metadata = DataForClient_pb2.MetaData(
@@ -120,14 +120,13 @@ class DFC(DataForClient_pb2_grpc.DFCServicer):
     def downloadChunk(self, request, context):
         cid = request.ChunkId
         theChunk = StoreManager.StoreManager.get(cid)
-        metadata = DataForClient_pb2.MetaData(
+        package = DataForClient_pb2.dataOfChunk(
             ChunkSize=theChunk.ChunkSize,
             ChunkId=theChunk.getChunkId(),
             inFID=theChunk.getFileID(),
             offset=theChunk.getOffset(),
-            StoreDID=theChunk.getDataserverID()
+            Content=theChunk.getContent()
         )
-        package = DataForClient_pb2.dataOfChunk(metadata=metadata, chunk=theChunk.getContent())
         return package
 
 

@@ -51,15 +51,18 @@ class Register:
         self.DIDstuct = 0
 
     def show(self):
-        print('--------------------------Register Table--------------------------------------')
-        print('DataServerID |         IP          |    Port   |    Load    |   status')
-     #   print('-----------------------------------------------------------------------------')
+        print('--------------------------Register Table--------------------------------------------')
+        print('DataServerID |      IP       |    Port   |    status    |   Load   |  LoadList')
+     #   print('-----------------------------------------------------------------------------------')
         for did,items in self.table.items():
+            sss = ''
             if items.getstatus() == 1:
                 status = 'online'
             else:
                 status = 'uncertain'
-            print('No.%-10d %15s %12d %10d %15s'%(did, items.getIP(),items.getport(),items.getload(),status))
+            for chunks in items.getchunklist():
+                sss += str(chunks.getChunkId())+','
+            print('No.%-10d %-20s %-10d %-15s %-8d %-s'%(did, items.getIP(),items.getport(),status,items.getload(),sss))
 
     def setrow(self,row):
         if not isinstance(row, HeadRegister):

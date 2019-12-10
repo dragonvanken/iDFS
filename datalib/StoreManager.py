@@ -18,6 +18,7 @@ class StoreManage:
         achunk.setContent(None)
         if used:
             self.UsedChunk.setdefault(achunk.getChunkId(),achunk)
+            self.show()
         else :
             self.TmpChunk.setdefault(achunk.getChunkId(),achunk)
             self.show()
@@ -35,7 +36,6 @@ class StoreManage:
         achunk = self.TmpChunk.get(cid)
         self.UsedChunk.setdefault(cid,achunk)
         self.TmpChunk.pop(cid)
-        self.show()
         return True
 
     def aborted(self, cid, used = True):
