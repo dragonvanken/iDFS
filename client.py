@@ -167,8 +167,8 @@ def showAllCommands():
     print(colored('\tupload [file_path] [destination_path]', 'green'))
     print('\t\t上传本地文件到指定目录\n')
 
-    print(colored('\tdownload [file_path] [destination_name]', 'green'))
-    print('\t\t上传本地文件到指定目录\n')
+    print(colored('\tdownload [file_path] [optional:rename]', 'green'))
+    print('\t\t下载指定文件到当前路径\n')
 
     print(colored('\tdelete', 'green'))
     print('\t\t删除文件\n')
@@ -263,7 +263,7 @@ def downloadFile(stub, cur_node, user_input):
     for chk in chunksList:
         if chk.status == 0:
             print('Houston We Have a Problem --\nSomething Goes Wrong!')
-            return 0
+            return 1
         ip = chk.ip
         port = chk.port
         cid = chk.ChunkId
@@ -276,10 +276,13 @@ def downloadFile(stub, cur_node, user_input):
         theChunk.offset = chunkData.offset
         theChunk.Content = chunkData.Content
         dataList.append(theChunk)
-    name = path.split('/')[-1]
+
+    name = user_input.split()[1]
+    if len(user_input.split()) > 2:
+        name = user_input.split()[2]
     chunk.merge(dataList, name)
     print('%s Download Successful!!'% name)
-    return 1
+    return 0
     
 if __name__ == '__main__':
     colorama.init()

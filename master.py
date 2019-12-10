@@ -124,9 +124,10 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
         requestFile = request.path
         temp = FileManager.sys.FindByFilenama(requestFile)
         if not temp:
-            return MasterForClient_pb2.targetInfo(
+            yield MasterForClient_pb2.targetInfo(
                 status=0,
             )
+
         chunkList = temp.getChunkList()
         responseList = []
         for chk in chunkList:
