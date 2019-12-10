@@ -1,3 +1,4 @@
+import os
 import grpc
 from termcolor import colored
 from protocol import MasterForClient_pb2
@@ -74,14 +75,20 @@ def isUniquePath(destination):
     return filetree.FileTree.seek(destination) is None
 
 def upload(stub, cur_node, user_input):
-    path, destination = user_input.split()[1], user_input.split()[2]
-    print('uploading')
+    try:
+        path, destination = user_input.split()[1], user_input.split()[2]
+        if not os.path.exists(path) or '/' in destination:
+            raise Exception
+    except:
+        print(colored('Please specify valid file path and destination.', 'red'))
+        return cur_node
     try:
         destination = cur_node.path + '/' + destination
 
         if not isUniquePath(destination):
             print(colored('Unavailable path, please retry.', 'red'))
         else:
+            print('uploading.')
             upfile(stub, path, destination)
             print(colored('Successfully upload file '+path+' to '+destination,'green'))
             fetch(stub)
@@ -89,6 +96,7 @@ def upload(stub, cur_node, user_input):
     except:
         print(colored('Bad connection.', 'red'))
         print(colored('Please retry.', 'red'))
+        return cur_node
     return cur_node
 
 def fetch(stub):
@@ -188,9 +196,9 @@ def user_interface():
         elif cmd == 'upload':
             cur_node = upload(stub, cur_node, user_input)
         elif cmd == 'delete':
-            deleteFile(stub)
+            cur_node = deleteFile(stub, cur_node, user_input)
         elif cmd == 'download':
-            downloadFile(stub)
+            downloadFile(stub, cur_node, user_input)
         elif cmd == 'quit' or cmd == 'exit':
             exit(0)
         else:
@@ -201,13 +209,21 @@ def ConnectMaster():
     stub = MasterForClient_pb2_grpc.MFCStub(channel)
     return stub
 
-def deleteFile(stub):
-    toDelete = input('the file to delete: ')
+def deleteFile(stub, cur_node, user_input):
+    try:
+        toDelete = cur_node.path + '/' + user_input.split()[1]
+    except:
+        print(colored('Please specify file path'))
+        return cur_node
+    if filetree.FileTree.isUniquePath(toDelete):
+        print(colored('No such file.', 'red'))
+        return cur_node
     pakage = MasterForClient_pb2.FilePath(
         path=toDelete
     )
     ack = stub.deleteFile(pakage)
     print(ack.msg)
+    return filetree.FileTree.seek(cur_node.path)
 
 
 def requestDownloadFromMaster(stub, toDownload):
@@ -230,8 +246,12 @@ def downloadChunk(stub, CID):
     return chunkData
 
 
-def downloadFile(stub):
-    path = input('the file to download: ').strip('/ ')
+def downloadFile(stub, cur_node, user_input):
+    path = user_input.split()[1]
+    path = cur_node.path + '/' + path
+    if filetree.FileTree.isUniquePath(path):
+        print(colored('No such file.', 'red'))
+        return -1
     chunksList = requestDownloadFromMaster(stub, path)
     dataList = []
     for chk in chunksList:

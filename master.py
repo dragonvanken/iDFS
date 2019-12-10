@@ -44,7 +44,6 @@ class MFC(MasterForClient_pb2_grpc.MFCServicer):
     def getChunkInfoAndAllocatedDataServer(self, request, context):
         size = request.size
         path = request.path
-
         # islegal(path) ? 目录树判断路径是否合法
         Files = FileManager.sys.CreateFile(path, size)
         respondlist = []
@@ -202,10 +201,10 @@ def startbackup():
                     adid = achunk.getDataserverID()
                     try:
                         stub = ConnectDataServer(adid)
-                        deleteChunkOnDataServer(stub,achunk.getChunkID)
+                        deleteChunkOnDataServer(stub,achunk.getChunkId())
                         FileManager.sys.upchunkonRegister(adid,-1,achunk)
                     except:
-                        print(str(cid) + 'delete backup failed!')
+                        print(str(achunk.getChunkID()) + 'delete backup failed!')
             Backup.BackupManager.end(cid)
 
 def ConnectDataServer(DID):

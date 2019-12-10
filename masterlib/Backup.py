@@ -29,6 +29,15 @@ class BackupQue:
     def getall(self):
         return self.backupList
 
+    def clear(self):
+        self.backupList.clear()
+
+    def isempty(self):
+        if len(self.backupList) > 0:
+            return False
+        else:
+            return True
+
 class BackupManage:
     def __init__(self):
         self.MainAndBackupList = {} # 主键是主文件块cid，键值是备份文件块队列
@@ -42,7 +51,7 @@ class BackupManage:
     def updateMainchunk(self,maincid):
         if not maincid in self.MainAndBackupList:
             return None
-        if self.MainAndBackupList[maincid] == BackupQue():
+        if self.MainAndBackupList[maincid].isempty():
             self.MainAndBackupList.pop(maincid)
             return None
         newmainchunk = self.getAbackup(maincid)
@@ -71,7 +80,7 @@ class BackupManage:
     def deleteAbackupQue(self,maincid):
         if not maincid in self.MainAndBackupList:
             return None
-        self.MainAndBackupList[maincid] = BackupQue()
+        self.MainAndBackupList[maincid].clear()
     # 创建一个备份文件
     def createAbackup(self,maincid,achunk):
         if not maincid in self.MainAndBackupList:
