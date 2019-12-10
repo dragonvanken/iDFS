@@ -23,8 +23,7 @@ class MFD(MasterForData_pb2_grpc.MFDServicer):
 
     def Recommit(self, request, context):
         iscommit = FileManager.sys.vote(request.FID, request.CID)
-        # backup
-        Backup.BackupManager.insertCreateTask(request.FID, request.CID)
+
         if iscommit:
             # update filetree
             filetree.FileTree.insertNode(FileManager.sys.FindByFID(request.FID).path, False)
@@ -38,8 +37,8 @@ class MFD(MasterForData_pb2_grpc.MFDServicer):
                 stub = DataForMaster_pb2_grpc.DFMStub(channel)
                 stub.recommitChunk(DataForMaster_pb2.chunkID(CID=cid))
                 channel.close()
-            # backup
-            Backup.BackupManager.insertCreateTask(request.FID, request.CID)
+                # backup
+                Backup.BackupManager.insertCreateTask(c.getFileID(), c.ChunkId)
         return MasterForData_pb2.recommitResponse(isCommit=iscommit)
 
 class MFC(MasterForClient_pb2_grpc.MFCServicer):
