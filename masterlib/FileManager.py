@@ -177,8 +177,7 @@ class FileManager:
         return ip,port
 
     def SeekChunkOnDid(self,did):
-        chunklist = self.Register.getrow(did).getchunklist()
-        return chunklist
+        return self.Register.getrow(did).getchunklist()
 
     def sizeOfonlineDataserver(self):
         return self.Register.getonlinedid()

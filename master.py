@@ -160,7 +160,6 @@ def serve():
 
 def heartbeat():
     examdid = FileManager.sys.getalldataserver()
-    print(list(examdid))
     for did in list(examdid):
         try:
             # send heartpackage to DS
@@ -169,9 +168,10 @@ def heartbeat():
             if response.feedback:
                 if FileManager.sys.Register.getrow(did).getstatus() == 0:
                     FileManager.sys.uplive(did, 1)
-                    chunkondid = FileManager.sys.SeekChunkOnDid(did)
-                    if len(chunkondid) > 0:
-                        for mainchunk in chunkondid:
+                    newchunkondid = FileManager.sys.SeekChunkOnDid(did).copy()
+                    if len(newchunkondid) > 0:
+                        print('num:', len(newchunkondid))
+                        for mainchunk in newchunkondid:
                             maincid = FileManager.sys.FindByFileinfo(mainchunk.getFileID(), mainchunk.getOffset())
                             if maincid >= 0:
                                 Backup.BackupManager.createAbackup(maincid,mainchunk)
