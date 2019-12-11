@@ -25,6 +25,12 @@ class AFile:
                 return True
         return False
 
+    def findbyoffset(self, offset):
+        for item in self.ChunkList:
+            if item.offset == offset:
+                return item.getChunkId()
+        return -1
+
     def setFszie(self,s):
         self.size = s
 
@@ -144,7 +150,10 @@ class FileManager:
         deleteRecord = self.FileSystem.pop(fid)
         self.show()
         return deleteRecord
-
+    def FindByFileinfo(self,fid,offset):
+        if not fid in self.FileSystem:
+            return -1
+        return self.FileSystem[fid].findbyoffset(offset)
     # 寻找文件块最少的服务器
     def FindDataServer(self):
         return self.Register.BestDataserver()

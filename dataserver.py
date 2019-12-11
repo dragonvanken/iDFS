@@ -127,12 +127,18 @@ def register():
     ip = network.getEthIp()
     port = network.getOpenPort()
     response = stub.RegisteServer(MasterForData_pb2.socket(ip=ip, port=port))
+    StoreManager.StoreManager.setsocket(ip, port)
     StoreManager.StoreManager.setDID(response.id)
     return ip, port
 
-
 def serve():
-    ip, port = register()
+    restatus = StoreManager.restart()
+    if not restatus is None:
+        StoreManager.StoreManager = restatus
+        StoreManager.StoreManager.show()
+        ip, port = StoreManager.StoreManager.getsocket()
+    else:
+        ip, port = register()
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=200))
     DataForClient_pb2_grpc.add_DFCServicer_to_server(DFC(), server)
     DataForMaster_pb2_grpc.add_DFMServicer_to_server(DFM(),server)
@@ -140,7 +146,8 @@ def serve():
     server.start()
     try:
         while True:
-            time.sleep(10)  # one day in seconds 60*60*24
+            StoreManager.log(StoreManager.StoreManager)
+            time.sleep(5)  # one day in seconds 60*60*24
     except KeyboardInterrupt:
         server.stop(0)
 

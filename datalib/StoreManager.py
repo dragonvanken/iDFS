@@ -1,13 +1,36 @@
 from utility import chunk
+import pickle
 import  os
+def log(astoremanager):
+    address = 'dataserver.dlog'
+    with open(address, 'wb') as f:  # open file with write-mode
+        picklestring = pickle.dump(astoremanager, f)
+
+def restart():
+    address = 'dataserver.dlog'
+    if not os.path.exists(address):
+        return None
+    with open(address, 'rb') as f:  # open file with write-mode
+        s = pickle.load(f)
+        return s
+
 class StoreManage:
     def __init__(self):
         self.TmpChunk = {} #  临时存储表
         self.UsedChunk = {} # 永久存储表
         self.DID = 0
+        self.IP = ''
+        self.port = 0
 
     def _EnAddress(self,cid):
         return str(cid)
+
+    def setsocket(self,ip,port):
+        self.IP = ip
+        self.port = port
+
+    def getsocket(self):
+        return self.IP,self.port
 
     def store(self,achunk,used = False):
         if not isinstance(achunk,chunk.chunk):
@@ -67,6 +90,7 @@ class StoreManage:
     def show(self):
         print('***************************************************************************************************')
         print('The ServerID:',self.getDID())
+        print('The ServerSocket:', self.getsocket())
         print('------------------------ChunkManager Table----------------------------------------')
         print('   ChunkID  | from(FileID,offset)  |store(Address)|   ChunkSize | status')
         for key,achunk in self.UsedChunk.items():

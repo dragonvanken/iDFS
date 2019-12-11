@@ -38,10 +38,17 @@ class BackupQue:
         else:
             return True
 
+    def isexist(self,did):
+        for items in self.backupList:
+            if items.getDataserverID() == did:
+                return True
+            else:
+                return False
 class BackupManage:
     def __init__(self):
         self.MainAndBackupList = {} # 主键是主文件块cid，键值是备份文件块队列
         self.BackupTask = [] # 备份任务,(文件块cid,操作）true表示增加 false表示删除
+
     # 创建主文件块
     def createMainchunk(self,cid):
         if cid in self.MainAndBackupList:
@@ -64,6 +71,11 @@ class BackupManage:
         self.MainAndBackupList.pop(maincid)
         self.show()
         return newmainchunk
+
+    def isexist(self,maincid, did):
+        if not maincid in self.MainAndBackupList:
+            return False
+        return self.MainAndBackupList[maincid].isexist(did)
     # 导入备份队列
     def createBackupQue(self, maincid, bq):
         if not maincid in self.MainAndBackupList:

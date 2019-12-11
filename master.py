@@ -152,7 +152,7 @@ def serve():
     server.start()
     try:
         while True:
-            time.sleep(10)  # one day in seconds 60*60*24
+            time.sleep(5)  # one day in seconds 60*60*24
             heartbeat()  # 心跳检测
             startbackup() # 备份更新
     except KeyboardInterrupt:
@@ -165,7 +165,22 @@ def heartbeat():
         try:
             # send heartpackage to DS
             stub = ConnectDataServer(did)
-            sendheartbeat(stub,did)
+            response = sendheartbeat(stub,did)
+            if response.feedback:
+                if FileManager.sys.Register.getrow(did).getstatus() == 0:
+                    FileManager.sys.uplive(did, 1)
+                    chunkondid = FileManager.sys.SeekChunkOnDid(did)
+                    if len(chunkondid) > 0:
+                        for mainchunk in chunkondid:
+                            maincid = FileManager.sys.FindByFileinfo(mainchunk.getFileID(), mainchunk.getOffset())
+                            if maincid >= 0:
+                                Backup.BackupManager.createAbackup(maincid,mainchunk)
+                            else:
+                                did = mainchunk.getDataserverID()
+                                cid = mainchunk.getChunkId()
+                                response = deleteChunkOnDataServer(ConnectDataServer(did), cid)
+                                FileManager.sys.upchunkonRegister(did,-1,mainchunk)
+
         except:
             if FileManager.sys.Register.getrow(did).getstatus() == 1:
                 FileManager.sys.uplive(did,0)
@@ -182,10 +197,8 @@ def heartbeat():
                         else:
                             maincid= Backup.BackupManager.deleteBycid(mainchunk.getChunkId())
                             mainfid = FileManager.sys.seekbyCID(maincid)
-                            print(mainfid)
-                            print(maincid)
-                            print('!!!')
                             Backup.BackupManager.insertCreateTask(mainfid,maincid)
+
 
 def startbackup():
     while True:
@@ -203,6 +216,8 @@ def startbackup():
             if achunk is None:
                 continue
             did = achunk.getDataserverID()
+            if Backup.BackupManager.isexist(cid,did):
+                continue
             newchunk = chunk.chunk()
             newcid = FileManager.sys.getNewCID()
             newdid = FileManager.sys.FindBackupServer(achunk.getDataserverID())
